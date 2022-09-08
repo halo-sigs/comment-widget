@@ -1,0 +1,62 @@
+{
+  "name": "@halo-dev/comment-widget",
+  "version": "0.0.0",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/halo-comment-widget.es.js",
+  "module": "./dist/halo-comment-widget.es.js",
+  "unpkg": "./dist/halo-comment-widget.umd.js",
+  "jsdelivr": "./dist/halo-comment-widget.umd.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check build-only gen-types",
+    "preview": "vite preview --port 4173",
+    "test:unit": "vitest --environment jsdom",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "gen-types": "tsc -d --emitDeclarationOnly && vue-typegen gen -s src -o dist"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/halo-comment-widget.es.js"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "dependencies": {
+    "@halo-dev/components": "0.0.0-alpha.2",
+    "pinia": "^2.0.22",
+    "vue": "^3.2.39",
+    "vue-router": "^4.1.5"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@tailwindcss/forms": "^0.5.3",
+    "@types/jsdom": "^20.0.0",
+    "@types/node": "16.11.58",
+    "@vitejs/plugin-vue": "^3.1.0",
+    "@vitejs/plugin-vue-jsx": "^2.0.1",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-typescript": "^11.0.1",
+    "@vue/test-utils": "^2.0.2",
+    "@vue/tsconfig": "^0.1.3",
+    "autoprefixer": "^10.4.8",
+    "eslint": "^8.23.0",
+    "eslint-plugin-vue": "^9.4.0",
+    "jsdom": "^20.0.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.16",
+    "prettier": "^2.7.1",
+    "tailwindcss": "^3.1.8",
+    "tailwindcss-themer": "^2.0.1",
+    "typescript": "~4.7.4",
+    "vite": "^3.1.0",
+    "vitest": "^0.23.1",
+    "vue-tsc": "^0.40.13",
+    "vue-typegen": "^0.2.0"
+  }
+}
