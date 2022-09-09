@@ -12,7 +12,7 @@
   "jsdelivr": "./dist/halo-comment-widget.umd.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite build --watch",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
@@ -30,18 +30,23 @@
     "./dist/style.css": "./dist/style.css"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.0.6",
     "@halo-dev/components": "0.0.0-alpha.2",
+    "emoji-mart": "^5.2.2",
+    "floating-vue": "2.0.0-beta.20",
     "pinia": "^2.0.22",
     "vue": "^3.2.39",
     "vue-router": "^4.1.5"
   },
   "devDependencies": {
+    "@iconify-json/mdi": "^1.1.31",
     "@rushstack/eslint-patch": "^1.1.4",
     "@tailwindcss/forms": "^0.5.3",
     "@types/jsdom": "^20.0.0",
     "@types/node": "16.11.58",
     "@vitejs/plugin-vue": "^3.1.0",
     "@vitejs/plugin-vue-jsx": "^2.0.1",
+    "@vue/compiler-sfc": "^3.2.39",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.1",
     "@vue/test-utils": "^2.0.2",
@@ -57,6 +62,7 @@
     "tailwindcss": "^3.1.8",
     "tailwindcss-themer": "^2.0.1",
     "typescript": "~4.7.4",
+    "unplugin-icons": "^0.14.9",
     "vite": "^3.1.0",
     "vitest": "^0.23.1",
     "vue-tsc": "^0.40.13",

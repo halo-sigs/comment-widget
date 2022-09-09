@@ -1,12 +1,19 @@
 import { fileURLToPath, URL } from "node:url";
 
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import Vue from "@vitejs/plugin-vue";
+import VueJsx from "@vitejs/plugin-vue-jsx";
+import Icons from "unplugin-icons/vite";
 import path from "path";
 
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [
+    Vue(),
+    VueJsx(),
+    Icons({
+      compiler: "vue3",
+    }),
+  ],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
