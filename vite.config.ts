@@ -23,13 +23,15 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "HaloCommentWidget",
+      formats: ["es", "iife"],
       fileName: (format) => `halo-comment-widget.${format}.js`,
     },
     rollupOptions: {
-      external: ["vue"],
+      external: ["vue", "vue-router"],
       output: {
         globals: {
           vue: "Vue",
+          "vue-router": "VueRouter",
         },
         exports: "named",
       },

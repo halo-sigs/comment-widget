@@ -3,7 +3,6 @@ import { VButton } from "@halo-dev/components";
 import CommentItem from "./CommentItem.vue";
 import MdiStickerEmoji from "~icons/mdi/sticker-emoji";
 import MdiSendCircleOutline from "~icons/mdi/send-circle-outline";
-import { Dropdown } from "floating-vue";
 import data from "@emoji-mart/data";
 import i18n from "@emoji-mart/data/i18n/zh.json";
 import { Picker } from "emoji-mart";
@@ -33,12 +32,6 @@ function onEmojiSelect(object) {
   content.value += object.native;
   contentRef.value.focus();
 }
-
-watchEffect(() => {
-  if (emojiPickerRef.value) {
-    emojiPickerRef.value?.appendChild(emojiPicker);
-  }
-});
 
 const content = ref<string>("");
 const contentRef = ref();
@@ -119,14 +112,10 @@ onMounted(() => {
             <VButton size="sm">注销</VButton>
           </div>
           <div class="flex items-center flex-row gap-3">
-            <Dropdown>
-              <MdiStickerEmoji
-                class="w-5 h-5 text-gray-500 hover:text-gray-900 transition-all cursor-pointer"
-              />
-              <template #popper>
-                <div ref="emojiPickerRef"></div>
-              </template>
-            </Dropdown>
+            <MdiStickerEmoji
+              id="emojiPickerTrigger"
+              class="w-5 h-5 text-gray-500 hover:text-gray-900 transition-all cursor-pointer"
+            />
             <VButton type="secondary">
               <template #icon>
                 <MdiSendCircleOutline class="w-full h-full" />
