@@ -10,6 +10,7 @@ import { onMounted, ref, watchEffect } from "vue";
 import type { Comment } from "@halo-dev/api-client";
 import { faker } from "@faker-js/faker";
 import { Dropdown } from "floating-vue";
+import { apiClient } from "../utils/api-client";
 
 defineProps({
   msg: {
@@ -82,6 +83,10 @@ onMounted(() => {
     });
   }
   comments.value = result;
+
+  apiClient.post.listPosts().then((response) => {
+    console.log(response);
+  });
 });
 </script>
 <template>

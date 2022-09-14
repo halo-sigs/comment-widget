@@ -8,28 +8,12 @@ module.exports = {
     require("@tailwindcss/forms"),
     require("tailwindcss-themer")({
       defaultTheme: {
-        extend: {
-          colors: {
-            primary: "#4CCBA0",
-            secondary: "#0E1731",
-          },
-          borderRadius: {
-            base: "4px",
-          },
-        },
+        extend: {},
       },
       themes: [
         {
           name: "theme-dark",
-          extend: {
-            colors: {
-              primary: "black",
-              secondary: "#0E1731",
-            },
-            borderRadius: {
-              base: "2px",
-            },
-          },
+          extend: {},
         },
       ],
     }),
