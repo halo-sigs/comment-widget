@@ -7,7 +7,9 @@ import { Dropdown } from "floating-vue";
 import data from "@emoji-mart/data";
 import i18n from "@emoji-mart/data/i18n/zh.json";
 import { Picker } from "emoji-mart";
-import { ref, watchEffect } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
+import type { Comment } from "@halo-dev/api-client";
+import { faker } from "@faker-js/faker";
 
 defineProps({
   msg: {
@@ -23,7 +25,14 @@ const emojiPicker = new Picker({
   theme: "light",
   autoFocus: true,
   i18n: i18n,
+  onEmojiSelect: onEmojiSelect,
 });
+
+function onEmojiSelect(object) {
+  console.log(object);
+  content.value += object.native;
+  contentRef.value.focus();
+}
 
 watchEffect(() => {
   if (emojiPickerRef.value) {
@@ -31,31 +40,49 @@ watchEffect(() => {
   }
 });
 
-const comments = [
-  {
-    author: {
-      name: "Ryan Wang",
-      avatar: "https://ryanc.cc/avatar",
-    },
-    content:
-      "红烛秋光冷画屏，轻罗小扇扑流萤。天阶夜色凉如水，坐看牵牛织女星。 -- 唐·杜牧",
-  },
-  {
-    author: {
-      name: "张泌",
-    },
-    content:
-      "碧栏干外小中庭，雨初晴，晓莺声。飞絮落花，时节近清明。睡起卷帘无一事，匀面了，没心情。 -- 江城子·碧栏干外小中庭",
-  },
+const content = ref<string>("");
+const contentRef = ref();
 
-  {
-    author: {
-      name: "毛文锡",
-    },
-    content:
-      "鸳鸯对浴银塘暖，水面蒲稍短。垂杨低拂麴尘波，蛛丝结网露珠多，滴圆荷。遥思桃叶吴江碧，便是天河隔。锦鳞红鬣影沉沉，相思空有梦相寻，意难任。",
-  },
-];
+const comments = ref<Comment[]>();
+onMounted(() => {
+  const result: Comment[] = [];
+  for (let i = 0; i <= 50; i++) {
+    const content = faker.lorem.paragraph(5);
+    result.push({
+      metadata: {
+        name: faker.datatype.uuid(),
+        creationTimestamp: faker.date.recent().toISOString(),
+      },
+      spec: {
+        raw: content,
+        content: content,
+        subjectRef: {
+          kind: "Post",
+          name: faker.lorem.words(),
+        },
+        owner: {
+          kind: "Email",
+          name: faker.internet.email(),
+          displayName: faker.name.fullName(),
+          annotations: {
+            website: faker.internet.url(),
+            avatar: faker.internet.avatar(),
+          },
+        },
+        top: false,
+        priority: 0,
+        userAgent: faker.internet.userAgent(),
+        ipAddress: faker.internet.ip(),
+        allowNotification: false,
+        approved: true,
+        hidden: false,
+      },
+      kind: "Comment",
+      apiVersion: "content.halo.run/v1alpha1",
+    });
+  }
+  comments.value = result;
+});
 </script>
 <template>
   <div class="halo-comment-widget">
@@ -76,6 +103,8 @@ const comments = [
           />
         </div>
         <textarea
+          ref="contentRef"
+          v-model="content"
           class="w-full h-28 rounded-base border-gray-300 shadow-sm focus:border-secondary ring-0 outline-0"
           placeholder="Write a comment..."
         ></textarea>
@@ -111,7 +140,9 @@ const comments = [
     <div class="comment-timeline mt-6">
       <div class="flex items-center">
         <div class="flex flex-auto gap-1 items-center">
-          <span class="text-sm font-medium text-gray-900">10 条评论</span>
+          <span class="text-sm font-medium text-gray-900">
+            {{ comments?.length }} 条评论
+          </span>
           <span class="font-bold">·</span>
           <span class="text-sm text-gray-800">20 条回复</span>
         </div>
