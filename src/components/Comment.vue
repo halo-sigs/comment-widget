@@ -9,6 +9,7 @@ import { Picker } from "emoji-mart";
 import { onMounted, ref, watchEffect } from "vue";
 import type { Comment } from "@halo-dev/api-client";
 import { faker } from "@faker-js/faker";
+import { Dropdown } from "floating-vue";
 
 defineProps({
   msg: {
@@ -32,6 +33,12 @@ function onEmojiSelect(object) {
   content.value += object.native;
   contentRef.value.focus();
 }
+
+watchEffect(() => {
+  if (emojiPickerRef.value) {
+    emojiPickerRef.value?.appendChild(emojiPicker);
+  }
+});
 
 const content = ref<string>("");
 const contentRef = ref();
@@ -112,10 +119,14 @@ onMounted(() => {
             <VButton size="sm">注销</VButton>
           </div>
           <div class="flex items-center flex-row gap-3">
-            <MdiStickerEmoji
-              id="emojiPickerTrigger"
-              class="w-5 h-5 text-gray-500 hover:text-gray-900 transition-all cursor-pointer"
-            />
+            <Dropdown>
+              <MdiStickerEmoji
+                class="w-5 h-5 text-gray-500 hover:text-gray-900 transition-all cursor-pointer"
+              />
+              <template #popper>
+                <div ref="emojiPickerRef"></div>
+              </template>
+            </Dropdown>
             <VButton type="secondary">
               <template #icon>
                 <MdiSendCircleOutline class="w-full h-full" />
