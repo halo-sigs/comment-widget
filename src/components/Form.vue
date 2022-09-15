@@ -15,6 +15,7 @@ import type {
 import { Picker } from "emoji-mart";
 import { inject, ref, watchEffect } from "vue";
 import { apiClient } from "@/utils/api-client";
+import { useMagicKeys } from "@vueuse/core";
 
 const props = withDefaults(
   defineProps<{
@@ -125,6 +126,15 @@ function onEmojiSelect(emoji: { native: string }) {
 watchEffect(() => {
   if (emojiPickerRef.value) {
     emojiPickerRef.value?.appendChild(emojiPicker);
+  }
+});
+
+// KeyBoard shortcuts
+const { Command_Enter } = useMagicKeys();
+
+watchEffect(() => {
+  if (Command_Enter.value) {
+    handleSubmit();
   }
 });
 </script>

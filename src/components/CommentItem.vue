@@ -3,7 +3,7 @@ import ReplyItem from "./ReplyItem.vue";
 import { VTag, VAvatar } from "@halo-dev/components";
 import Form from "./Form.vue";
 import type { ListedComment, ListedReply, Post } from "@halo-dev/api-client";
-import { computed, ref, watch } from "vue";
+import { computed, provide, ref, watch, type Ref } from "vue";
 import { apiClient } from "@/utils/api-client";
 import { useTimeAgo } from "@vueuse/core";
 
@@ -20,6 +20,9 @@ const showReplies = ref(false);
 const showForm = ref(false);
 
 const replies = ref<ListedReply[]>([] as ListedReply[]);
+const hoveredReply = ref<ListedReply>();
+
+provide<Ref<ListedReply | undefined>>("hoveredReply", hoveredReply);
 
 const timeAgo = useTimeAgo(
   new Date(props.comment.comment.metadata.creationTimestamp || new Date())
@@ -69,7 +72,10 @@ const onReplyCreated = () => {
 </script>
 
 <template>
-  <div class="comment-item py-4">
+  <div
+    :id="`comment-${comment?.comment.metadata.name}`"
+    class="comment-item py-4"
+  >
     <div class="flex flex-row gap-3">
       <div class="comment-avatar">
         <VAvatar
@@ -85,11 +91,12 @@ const onReplyCreated = () => {
             <div class="text-sm font-medium">
               {{ comment?.owner?.displayName }}
             </div>
-            <div
+            <a
+              :href="`#comment-${comment?.comment.metadata.name}`"
               class="text-xs text-gray-500 cursor-pointer hover:text-blue-600 hover:underline"
             >
               {{ timeAgo }}
-            </div>
+            </a>
             <VTag v-if="isAuthor" rounded>Author</VTag>
           </div>
         </div>
@@ -100,7 +107,7 @@ const onReplyCreated = () => {
         </div>
         <div class="comment-actions mt-2 flex flex-auto gap-1 items-center">
           <span
-            class="text-xs text-gray-600 hover:text-gray-900 cursor-pointer"
+            class="text-xs text-gray-600 hover:text-gray-900 cursor-pointer select-none"
             @click="showReplies = !showReplies"
           >
             {{ comment?.comment.status?.replyCount || 0 }} 条回复
@@ -110,7 +117,7 @@ const onReplyCreated = () => {
             class="text-xs text-gray-600 hover:text-gray-900 cursor-pointer select-none"
             @click="showForm = !showForm"
           >
-            新回复
+            加入回复
           </span>
         </div>
 
@@ -129,6 +136,7 @@ const onReplyCreated = () => {
               :class="{ '!pt-2': index === 1 }"
               :comment="comment"
               :reply="reply"
+              :replies="replies"
               @reload="handleFetchReplies"
             ></ReplyItem>
           </div>
