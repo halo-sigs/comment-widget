@@ -5,6 +5,7 @@ import Form from "./Form.vue";
 import type { ListedComment, ListedReply, Post } from "@halo-dev/api-client";
 import { computed, ref, watch } from "vue";
 import { apiClient } from "@/utils/api-client";
+import { useTimeAgo } from "@vueuse/core";
 
 const props = withDefaults(
   defineProps<{
@@ -19,6 +20,10 @@ const showReplies = ref(false);
 const showForm = ref(false);
 
 const replies = ref<ListedReply[]>([] as ListedReply[]);
+
+const timeAgo = useTimeAgo(
+  new Date(props.comment.comment.metadata.creationTimestamp || new Date())
+);
 
 const isAuthor = computed(() => {
   if (!props.comment) {
@@ -37,7 +42,9 @@ const isAuthor = computed(() => {
 
 const handleFetchReplies = async () => {
   try {
-    const { data } = await apiClient.reply.listReplies();
+    const { data } = await apiClient.reply.listReplies({
+      commentName: props.comment.comment.metadata.name,
+    });
     replies.value = data.items;
   } catch (error) {
     console.error("Failed to fetch comment replies", error);
@@ -54,6 +61,11 @@ watch(
     }
   }
 );
+
+const onReplyCreated = () => {
+  showForm.value = false;
+  showReplies.value = true;
+};
 </script>
 
 <template>
@@ -76,7 +88,7 @@ watch(
             <div
               class="text-xs text-gray-500 cursor-pointer hover:text-blue-600 hover:underline"
             >
-              2 hours ago
+              {{ timeAgo }}
             </div>
             <VTag v-if="isAuthor" rounded>Author</VTag>
           </div>
@@ -102,7 +114,12 @@ watch(
           </span>
         </div>
 
-        <Form v-if="showForm" class="mt-2" :comment="comment" />
+        <Form
+          v-if="showForm"
+          class="mt-2"
+          :comment="comment"
+          @created="onReplyCreated"
+        />
 
         <div v-if="showReplies" class="comment-replies mt-2">
           <div class="flex flex-col divide-y divide-gray-100">

@@ -50,10 +50,14 @@ const handleFetchComments = async () => {
 };
 
 onMounted(handleFetchComments);
+
+const onCommentCreated = () => {
+  handleFetchComments();
+};
 </script>
 <template>
   <div class="halo-comment-widget">
-    <Form @created="handleFetchComments" />
+    <Form @created="onCommentCreated" />
     <div class="comment-timeline mt-6">
       <div class="flex items-center">
         <div class="flex flex-auto gap-1 items-center">

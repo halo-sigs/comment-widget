@@ -3,8 +3,9 @@ import { VTag, VAvatar } from "@halo-dev/components";
 import Form from "./Form.vue";
 import type { ListedComment, ListedReply } from "@halo-dev/api-client";
 import { ref } from "vue";
+import { useTimeAgo } from "@vueuse/core";
 
-defineProps<{
+const props = defineProps<{
   comment?: ListedComment;
   reply: ListedReply;
 }>();
@@ -14,6 +15,15 @@ const emit = defineEmits<{
 }>();
 
 const showForm = ref(false);
+
+const timeAgo = useTimeAgo(
+  new Date(props.reply.reply.metadata.creationTimestamp || new Date())
+);
+
+const onReplyCreated = () => {
+  emit("reload");
+  showForm.value = false;
+};
 </script>
 
 <template>
@@ -36,7 +46,7 @@ const showForm = ref(false);
             <div
               class="text-xs text-gray-500 cursor-pointer hover:text-blue-600 hover:underline"
             >
-              2 hours ago
+              {{ timeAgo }}
             </div>
             <VTag rounded>Author</VTag>
           </div>
@@ -65,7 +75,7 @@ const showForm = ref(false);
           class="mt-2"
           :comment="comment"
           :reply="reply"
-          @created="emit('reload')"
+          @created="onReplyCreated"
         />
       </div>
     </div>
