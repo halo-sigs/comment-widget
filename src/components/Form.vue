@@ -13,7 +13,7 @@ import type {
 } from "@halo-dev/api-client";
 // @ts-ignore
 import { Picker } from "emoji-mart";
-import { inject, ref, watchEffect } from "vue";
+import { inject, onMounted, ref, watchEffect } from "vue";
 import { apiClient } from "@/utils/api-client";
 import { useMagicKeys } from "@vueuse/core";
 
@@ -136,6 +136,15 @@ watchEffect(() => {
   if (Command_Enter.value) {
     handleSubmit();
   }
+});
+
+onMounted(() => {
+  const timer = setTimeout(() => {
+    if (contentInputRef.value) {
+      contentInputRef.value.focus();
+    }
+    clearTimeout(timer);
+  }, 0);
 });
 </script>
 

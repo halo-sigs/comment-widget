@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import ReplyItem from "./ReplyItem.vue";
-import { VTag, VAvatar } from "@halo-dev/components";
+import { VTag, VAvatar, VEmpty, VSpace, VButton } from "@halo-dev/components";
+import Loading from "./Loading.vue";
 import Form from "./Form.vue";
 import type { ListedComment, ListedReply, Post } from "@halo-dev/api-client";
 import { computed, provide, ref, watch, type Ref } from "vue";
@@ -20,6 +21,7 @@ const showReplies = ref(false);
 const showForm = ref(false);
 
 const replies = ref<ListedReply[]>([] as ListedReply[]);
+const loading = ref(false);
 const hoveredReply = ref<ListedReply>();
 
 provide<Ref<ListedReply | undefined>>("hoveredReply", hoveredReply);
@@ -45,12 +47,15 @@ const isAuthor = computed(() => {
 
 const handleFetchReplies = async () => {
   try {
+    loading.value = true;
     const { data } = await apiClient.reply.listReplies({
       commentName: props.comment.comment.metadata.name,
     });
     replies.value = data.items;
   } catch (error) {
     console.error("Failed to fetch comment replies", error);
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -130,8 +135,26 @@ const onReplyCreated = () => {
 
         <div v-if="showReplies" class="comment-replies mt-2">
           <div class="flex flex-col divide-y divide-gray-100">
+            <Loading v-if="loading" />
+            <VEmpty
+              v-else-if="!replies.length && !loading && !showForm"
+              title="暂无回复"
+              message="你可以尝试点击刷新或者添加新回复"
+            >
+              <template #actions>
+                <VSpace>
+                  <VButton type="default" @click="handleFetchReplies">
+                    刷新
+                  </VButton>
+                  <VButton type="primary" @click="showForm = true">
+                    回复
+                  </VButton>
+                </VSpace>
+              </template>
+            </VEmpty>
             <ReplyItem
               v-for="(reply, index) in replies"
+              v-else
               :key="index"
               :class="{ '!pt-2': index === 1 }"
               :comment="comment"
