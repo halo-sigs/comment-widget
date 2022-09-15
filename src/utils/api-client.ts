@@ -44,7 +44,6 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     console.log("error", error);
-    alert(error);
     return Promise.reject(error);
   }
 );

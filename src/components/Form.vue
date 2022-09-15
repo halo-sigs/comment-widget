@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { VButton, VAvatar } from "@halo-dev/components";
+import { VButton, VAvatar, IconUserLine } from "@halo-dev/components";
 import { Dropdown } from "floating-vue";
+import LoginModal from "./LoginModal.vue";
 import data from "@emoji-mart/data";
 import i18n from "@emoji-mart/data/i18n/zh.json";
 import MdiStickerEmoji from "~icons/mdi/sticker-emoji";
@@ -10,10 +11,11 @@ import type {
   ListedComment,
   ListedReply,
   ReplyRequest,
+  User,
 } from "@halo-dev/api-client";
 // @ts-ignore
 import { Picker } from "emoji-mart";
-import { inject, onMounted, ref, watchEffect } from "vue";
+import { inject, onMounted, ref, watchEffect, type Ref } from "vue";
 import { apiClient } from "@/utils/api-client";
 import { useMagicKeys } from "@vueuse/core";
 
@@ -32,8 +34,11 @@ const emit = defineEmits<{
   (event: "created"): void;
 }>();
 
+const currentUser = inject<Ref<User | undefined>>("currentUser");
 const kind = inject<string>("kind");
 const name = inject<string>("name");
+
+const loginModal = ref(false);
 
 const raw = ref("");
 const allowNotification = ref(true);
@@ -149,6 +154,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <LoginModal v-model:visible="loginModal" />
   <div class="comment-form flex gap-4">
     <div class="flex-1 flex flex-col gap-y-4">
       <div v-if="false" class="grid gap-2 grid-cols-1 sm:grid-cols-3">
@@ -175,13 +181,23 @@ onMounted(() => {
 
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <VAvatar
-            src="https://avatars.dicebear.com/api/adventurer-neutral/ryanwang.svg"
-            size="sm"
-            circle
-          />
-          <span class="text-sm font-medium"> Ryan Wang </span>
-          <VButton size="sm">注销</VButton>
+          <template v-if="currentUser">
+            <VAvatar
+              src="https://avatars.dicebear.com/api/adventurer-neutral/ryanwang.svg"
+              size="sm"
+              circle
+            />
+            <span class="text-sm font-medium"> Ryan Wang </span>
+            <VButton size="sm">注销</VButton>
+          </template>
+          <template v-else>
+            <VButton size="sm" @click="loginModal = true">
+              <template #icon>
+                <IconUserLine class="w-full h-full" />
+              </template>
+              登录
+            </VButton>
+          </template>
         </div>
         <div class="flex items-center flex-row gap-3">
           <Dropdown>
@@ -192,7 +208,12 @@ onMounted(() => {
               <div ref="emojiPickerRef"></div>
             </template>
           </Dropdown>
-          <VButton type="secondary" :loading="saving" @click="handleSubmit">
+          <VButton
+            :disabled="!raw || !currentUser"
+            type="secondary"
+            :loading="saving"
+            @click="handleSubmit"
+          >
             <template #icon>
               <MdiSendCircleOutline class="w-full h-full" />
             </template>

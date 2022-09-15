@@ -3,8 +3,8 @@ import { VEmpty, VSpace, VButton, VPagination } from "@halo-dev/components";
 import CommentItem from "./CommentItem.vue";
 import Loading from "./Loading.vue";
 import Form from "./Form.vue";
-import { onMounted, provide, ref } from "vue";
-import type { ListedCommentList } from "@halo-dev/api-client";
+import { onMounted, provide, ref, type Ref } from "vue";
+import type { ListedCommentList, User } from "@halo-dev/api-client";
 import { apiClient } from "../utils/api-client";
 
 const props = withDefaults(
@@ -21,6 +21,7 @@ const props = withDefaults(
 provide<string>("kind", props.kind);
 provide<string>("name", props.name);
 
+const currentUser = ref<User>();
 const comments = ref<ListedCommentList>({
   page: 1,
   size: 20,
@@ -32,6 +33,17 @@ const comments = ref<ListedCommentList>({
   hasPrevious: false,
 });
 const loading = ref(false);
+
+provide<Ref<User | undefined>>("currentUser", currentUser);
+
+const handleFetchLoginedUser = async () => {
+  try {
+    const { data } = await apiClient.user.getCurrentUserDetail();
+    currentUser.value = data;
+  } catch (error) {
+    console.error("Fetch logined user failed", error);
+  }
+};
 
 const handleFetchComments = async () => {
   try {
@@ -63,7 +75,10 @@ const handlePaginationChange = ({
   handleFetchComments();
 };
 
-onMounted(handleFetchComments);
+onMounted(() => {
+  handleFetchLoginedUser();
+  handleFetchComments();
+});
 
 const onCommentCreated = () => {
   handleFetchComments();
@@ -107,7 +122,10 @@ const onCommentCreated = () => {
         ></CommentItem>
       </div>
     </div>
-    <div class="bg-white my-4 sm:flex sm:items-center sm:justify-center">
+    <div
+      v-if="comments.hasPrevious || comments.hasNext"
+      class="bg-white my-4 sm:flex sm:items-center sm:justify-center"
+    >
       <VPagination
         :page="comments.page"
         :size="comments.size"
