@@ -76,7 +76,6 @@ watch(
     title="登录"
     :visible="visible"
     :width="400"
-    mount-to-body
     @update:visible="onVisibleChange"
   >
     <div class="flex gap-2 flex-col">
