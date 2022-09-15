@@ -6,12 +6,13 @@ importers:
     specifiers:
       '@emoji-mart/data': ^1.0.6
       '@faker-js/faker': ^7.5.0
-      '@halo-dev/api-client': ^0.0.19
+      '@halo-dev/api-client': ^0.0.21
       '@halo-dev/components': 0.0.0-alpha.3
       '@iconify-json/mdi': ^1.1.32
       '@rushstack/eslint-patch': ^1.1.4
       '@tailwindcss/forms': ^0.5.3
       '@types/jsdom': ^20.0.0
+      '@types/lodash.clonedeep': ^4.5.7
       '@types/node': 16.11.58
       '@vitejs/plugin-vue': ^2.3.4
       '@vue/compiler-sfc': ^3.2.39
@@ -26,6 +27,7 @@ importers:
       eslint-plugin-vue: ^9.4.0
       floating-vue: 2.0.0-beta.20
       jsdom: ^20.0.0
+      lodash.clonedeep: ^4.5.0
       npm-run-all: ^4.1.5
       postcss: ^8.4.16
       prettier: ^2.7.1
@@ -43,11 +45,12 @@ importers:
     dependencies:
       '@emoji-mart/data': 1.0.6
       '@faker-js/faker': 7.5.0
-      '@halo-dev/api-client': 0.0.19
+      '@halo-dev/api-client': 0.0.21
       '@halo-dev/components': 0.0.0-alpha.3_u55wpvgoaskkfdnhr4v2vlugdi
       axios: 0.27.2
       emoji-mart: 5.2.2
       floating-vue: 2.0.0-beta.20_vue@3.2.39
+      lodash.clonedeep: 4.5.0
       vue: 3.2.39
       vue-router: 4.1.5_vue@3.2.39
     devDependencies:
@@ -55,6 +58,7 @@ importers:
       '@rushstack/eslint-patch': 1.1.4
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.1.8
       '@types/jsdom': 20.0.0
+      '@types/lodash.clonedeep': 4.5.7
       '@types/node': 16.11.58
       '@vitejs/plugin-vue': 2.3.4_vite@2.9.15+vue@3.2.39
       '@vue/compiler-sfc': 3.2.39
@@ -254,8 +258,8 @@ packages:
       '@floating-ui/core': 0.3.1
     dev: false
 
-  /@halo-dev/api-client/0.0.19:
-    resolution: {integrity: sha512-5+tVk0BFeLXpqw5+yVl5b3CV0S0jjenA8/0Co8QdiQjspWmef1kXGzKpRKDBTqASTs6AOJk3cqSVoDrsVKftRg==}
+  /@halo-dev/api-client/0.0.21:
+    resolution: {integrity: sha512-7L/bvODQ+1/xRe1BmpifGihRcn2bV409I+ty1G/mbYVdfdXh7ac6aclEQTwoQF2kZk/rPU7tA+XpUsEwAAB94w==}
     dev: false
 
   /@halo-dev/components/0.0.0-alpha.3_u55wpvgoaskkfdnhr4v2vlugdi:
@@ -567,6 +571,16 @@ packages:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
       '@types/node': 16.11.58
+    dev: true
+
+  /@types/lodash.clonedeep/4.5.7:
+    resolution: {integrity: sha512-ccNqkPptFIXrpVqUECi60/DFxjNKsfoQxSQsgcBJCX/fuX1wgyQieojkcWH/KpE3xzLoWN/2k+ZeGqIN3paSvw==}
+    dependencies:
+      '@types/lodash': 4.14.185
+    dev: true
+
+  /@types/lodash/4.14.185:
+    resolution: {integrity: sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==}
     dev: true
 
   /@types/node/16.11.58:
@@ -3354,6 +3368,10 @@ packages:
     dependencies:
       p-locate: 5.0.0
     dev: true
+
+  /lodash.clonedeep/4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
+    dev: false
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}

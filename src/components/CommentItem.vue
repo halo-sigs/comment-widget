@@ -1,56 +1,35 @@
 <script lang="ts" setup>
 import ReplyItem from "./ReplyItem.vue";
 import { VTag } from "@halo-dev/components";
-import type { Comment, Reply } from "@halo-dev/api-client";
-import { onMounted, ref } from "vue";
-import { faker } from "@faker-js/faker";
+import type { ListedComment, Post, Reply } from "@halo-dev/api-client";
+import { computed, ref } from "vue";
 
-defineProps<{
-  comment: Comment;
-}>();
+const props = withDefaults(
+  defineProps<{
+    comment?: ListedComment;
+  }>(),
+  {
+    comment: undefined,
+  }
+);
 
-const showReplies = ref(true);
+const showReplies = ref(false);
 
 const replies = ref<Reply[]>([] as Reply[]);
 
-onMounted(() => {
-  const result: Reply[] = [];
-
-  for (let i = 0; i <= 5; i++) {
-    const content = faker.lorem.paragraph(3);
-    result.push({
-      metadata: {
-        name: faker.datatype.uuid(),
-        creationTimestamp: faker.date.recent().toISOString(),
-      },
-      spec: {
-        raw: content,
-        content: content,
-        owner: {
-          kind: "Email",
-          name: faker.internet.email(),
-          displayName: faker.name.fullName(),
-          annotations: {
-            website: faker.internet.url(),
-            avatar: faker.internet.avatar(),
-          },
-        },
-        quoteReply: faker.name.fullName(),
-        commentName: faker.datatype.uuid(),
-        top: false,
-        priority: 0,
-        userAgent: faker.internet.userAgent(),
-        ipAddress: faker.internet.ip(),
-        allowNotification: false,
-        approved: true,
-        hidden: false,
-      },
-      kind: "Reply",
-      apiVersion: "content.halo.run/v1alpha1",
-    });
+const isAuthor = computed(() => {
+  if (!props.comment) {
+    return false;
   }
-
-  replies.value = result;
+  const { comment, subject, owner } = props.comment;
+  if (comment.spec.owner.kind !== "User") {
+    return false;
+  }
+  if (!subject) {
+    return false;
+  }
+  const { spec } = subject as Post;
+  return owner?.name === spec.owner;
 });
 </script>
 
@@ -60,26 +39,27 @@ onMounted(() => {
       <div class="comment-avatar w-9 h-9">
         <img
           class="w-full h-full rounded-full"
-          :src="comment.spec.owner.annotations?.avatar"
+          :src="comment?.owner?.avatar"
+          :alt="comment?.owner?.displayName"
         />
       </div>
       <div class="flex-1">
         <div class="comment-informations flex items-center">
           <div class="flex flex-auto items-center gap-3">
             <div class="text-sm font-medium">
-              {{ comment.spec.owner.displayName }}
+              {{ comment?.owner?.displayName }}
             </div>
             <div
               class="text-xs text-gray-500 cursor-pointer hover:text-blue-600 hover:underline"
             >
               2 hours ago
             </div>
-            <VTag rounded>Author</VTag>
+            <VTag v-if="isAuthor" rounded>Author</VTag>
           </div>
         </div>
         <div class="comment-content mt-2">
           <p class="text-sm text-gray-800">
-            {{ comment.spec.content }}
+            {{ comment?.comment?.spec.content }}
           </p>
         </div>
         <div class="comment-actions mt-2 flex flex-auto gap-1 items-center">

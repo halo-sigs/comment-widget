@@ -5,6 +5,7 @@ import {
   ApiHaloRunV1alpha1SinglePageApi,
   ApiHaloRunV1alpha1ThemeApi,
   ApiHaloRunV1alpha1UserApi,
+  ApiHaloRunV1alpha1CommentApi,
   ContentHaloRunV1alpha1CategoryApi,
   ContentHaloRunV1alpha1CommentApi,
   ContentHaloRunV1alpha1PostApi,
@@ -28,10 +29,9 @@ import {
   V1alpha1SettingApi,
   V1alpha1UserApi,
 } from "@halo-dev/api-client";
-import type { AxiosInstance } from "axios";
 import axios from "axios";
 
-let apiUrl = "http://localhost:8090";
+const apiUrl = "http://localhost:8090";
 const axiosInstance = axios.create({
   baseURL: apiUrl,
   withCredentials: true,
@@ -130,6 +130,7 @@ const apiClient = {
     axiosInstance
   ),
   content: new ApiHaloRunV1alpha1ContentApi(undefined, apiUrl, axiosInstance),
+  comment: new ApiHaloRunV1alpha1CommentApi(undefined, apiUrl, axiosInstance),
 };
 
 export { apiClient };
