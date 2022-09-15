@@ -1,9 +1,23 @@
 <script lang="ts" setup>
 import CommentItem from "./CommentItem.vue";
 import Form from "./Form.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, provide, ref } from "vue";
 import type { ListedCommentList } from "@halo-dev/api-client";
 import { apiClient } from "../utils/api-client";
+
+const props = withDefaults(
+  defineProps<{
+    kind: string;
+    name: string;
+  }>(),
+  {
+    kind: undefined,
+    name: undefined,
+  }
+);
+
+provide<string>("kind", props.kind);
+provide<string>("name", props.name);
 
 const comments = ref<ListedCommentList>({
   page: 1,
@@ -23,8 +37,9 @@ const handleFetchComments = async () => {
     const { data } = await apiClient.comment.listComments({
       page: comments.value.page,
       size: comments.value.size,
-      subjectKind: "Post",
-      subjectName: "cc0ba2cc-9075-4865-94ed-fae81761dcf2",
+      subjectKind: props.kind,
+      subjectName: props.name,
+      sort: "CREATE_TIME",
     });
     comments.value = data;
   } catch (error) {
@@ -38,12 +53,12 @@ onMounted(handleFetchComments);
 </script>
 <template>
   <div class="halo-comment-widget">
-    <Form />
+    <Form @created="handleFetchComments" />
     <div class="comment-timeline mt-6">
       <div class="flex items-center">
         <div class="flex flex-auto gap-1 items-center">
           <span class="text-sm font-medium text-gray-900">
-            {{ comments?.items.length }} 条评论
+            {{ comments?.total || 0 }} 条评论
           </span>
           <span class="font-bold">·</span>
           <span class="text-sm text-gray-800">20 条回复</span>

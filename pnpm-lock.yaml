@@ -5,9 +5,8 @@ importers:
   .:
     specifiers:
       '@emoji-mart/data': ^1.0.6
-      '@faker-js/faker': ^7.5.0
-      '@halo-dev/api-client': ^0.0.21
-      '@halo-dev/components': 0.0.0-alpha.3
+      '@halo-dev/api-client': ^0.0.22
+      '@halo-dev/components': ^0.0.0-alpha.3
       '@iconify-json/mdi': ^1.1.32
       '@rushstack/eslint-patch': ^1.1.4
       '@tailwindcss/forms': ^0.5.3
@@ -44,8 +43,7 @@ importers:
       vue-typegen: ^0.2.0
     dependencies:
       '@emoji-mart/data': 1.0.6
-      '@faker-js/faker': 7.5.0
-      '@halo-dev/api-client': 0.0.21
+      '@halo-dev/api-client': 0.0.22
       '@halo-dev/components': 0.0.0-alpha.3_u55wpvgoaskkfdnhr4v2vlugdi
       axios: 0.27.2
       emoji-mart: 5.2.2
@@ -243,11 +241,6 @@ packages:
       - supports-color
     dev: true
 
-  /@faker-js/faker/7.5.0:
-    resolution: {integrity: sha512-8wNUCCUHvfvI0gQpDUho/3gPzABffnCn5um65F8dzQ86zz6dlt4+nmAA7PQUc8L+eH+9RgR/qzy5N/8kN0Ozdw==}
-    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
-    dev: false
-
   /@floating-ui/core/0.3.1:
     resolution: {integrity: sha512-ensKY7Ub59u16qsVIFEo2hwTCqZ/r9oZZFh51ivcLGHfUwTn8l1Xzng8RJUe91H/UP8PeqeBronAGx0qmzwk2g==}
     dev: false
@@ -258,8 +251,8 @@ packages:
       '@floating-ui/core': 0.3.1
     dev: false
 
-  /@halo-dev/api-client/0.0.21:
-    resolution: {integrity: sha512-7L/bvODQ+1/xRe1BmpifGihRcn2bV409I+ty1G/mbYVdfdXh7ac6aclEQTwoQF2kZk/rPU7tA+XpUsEwAAB94w==}
+  /@halo-dev/api-client/0.0.22:
+    resolution: {integrity: sha512-0RBc2N+oqPIy+fE6otp8cjeWTvBgjH986lzhz2T8Gr6Byzp0cHzj3Y3+aT6t39Wg4Ux+wPRSV+Fh0x8VA8Jz5A==}
     dev: false
 
   /@halo-dev/components/0.0.0-alpha.3_u55wpvgoaskkfdnhr4v2vlugdi:

@@ -6,6 +6,7 @@ import {
   ApiHaloRunV1alpha1ThemeApi,
   ApiHaloRunV1alpha1UserApi,
   ApiHaloRunV1alpha1CommentApi,
+  ApiHaloRunV1alpha1ReplyApi,
   ContentHaloRunV1alpha1CategoryApi,
   ContentHaloRunV1alpha1CommentApi,
   ContentHaloRunV1alpha1PostApi,
@@ -131,6 +132,7 @@ const apiClient = {
   ),
   content: new ApiHaloRunV1alpha1ContentApi(undefined, apiUrl, axiosInstance),
   comment: new ApiHaloRunV1alpha1CommentApi(undefined, apiUrl, axiosInstance),
+  reply: new ApiHaloRunV1alpha1ReplyApi(undefined, apiUrl, axiosInstance),
 };
 
 export { apiClient };

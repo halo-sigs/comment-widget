@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import ReplyItem from "./ReplyItem.vue";
-import { VTag } from "@halo-dev/components";
-import type { ListedComment, Post, Reply } from "@halo-dev/api-client";
-import { computed, ref } from "vue";
+import { VTag, VAvatar } from "@halo-dev/components";
+import Form from "./Form.vue";
+import type { ListedComment, ListedReply, Post } from "@halo-dev/api-client";
+import { computed, ref, watch } from "vue";
+import { apiClient } from "@/utils/api-client";
 
 const props = withDefaults(
   defineProps<{
@@ -14,8 +16,9 @@ const props = withDefaults(
 );
 
 const showReplies = ref(false);
+const showForm = ref(false);
 
-const replies = ref<Reply[]>([] as Reply[]);
+const replies = ref<ListedReply[]>([] as ListedReply[]);
 
 const isAuthor = computed(() => {
   if (!props.comment) {
@@ -31,16 +34,37 @@ const isAuthor = computed(() => {
   const { spec } = subject as Post;
   return owner?.name === spec.owner;
 });
+
+const handleFetchReplies = async () => {
+  try {
+    const { data } = await apiClient.reply.listReplies();
+    replies.value = data.items;
+  } catch (error) {
+    console.error("Failed to fetch comment replies", error);
+  }
+};
+
+watch(
+  () => showReplies.value,
+  () => {
+    if (showReplies.value) {
+      handleFetchReplies();
+    } else {
+      replies.value.length = 0;
+    }
+  }
+);
 </script>
 
 <template>
   <div class="comment-item py-4">
     <div class="flex flex-row gap-3">
-      <div class="comment-avatar w-9 h-9">
-        <img
-          class="w-full h-full rounded-full"
+      <div class="comment-avatar">
+        <VAvatar
           :src="comment?.owner?.avatar"
           :alt="comment?.owner?.displayName"
+          size="sm"
+          circle
         />
       </div>
       <div class="flex-1">
@@ -67,22 +91,28 @@ const isAuthor = computed(() => {
             class="text-xs text-gray-600 hover:text-gray-900 cursor-pointer"
             @click="showReplies = !showReplies"
           >
-            {{ replies.length }} 条回复
+            {{ comment?.comment.status?.replyCount || 0 }} 条回复
           </span>
           <span class="text-gray-600">·</span>
           <span
-            class="text-xs text-gray-600 hover:text-gray-900 cursor-pointer"
+            class="text-xs text-gray-600 hover:text-gray-900 cursor-pointer select-none"
+            @click="showForm = !showForm"
           >
             新回复
           </span>
         </div>
+
+        <Form v-if="showForm" class="mt-2" :comment="comment" />
+
         <div v-if="showReplies" class="comment-replies mt-2">
           <div class="flex flex-col divide-y divide-gray-100">
             <ReplyItem
               v-for="(reply, index) in replies"
               :key="index"
               :class="{ '!pt-2': index === 1 }"
+              :comment="comment"
               :reply="reply"
+              @reload="handleFetchReplies"
             ></ReplyItem>
           </div>
         </div>

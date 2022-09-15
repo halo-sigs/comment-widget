@@ -1,33 +1,109 @@
 <script lang="ts" setup>
-import { VButton } from "@halo-dev/components";
+import { VButton, VAvatar } from "@halo-dev/components";
 import { Dropdown } from "floating-vue";
 import data from "@emoji-mart/data";
 import i18n from "@emoji-mart/data/i18n/zh.json";
 import MdiStickerEmoji from "~icons/mdi/sticker-emoji";
 import MdiSendCircleOutline from "~icons/mdi/send-circle-outline";
-import type { ReplyRequest } from "@halo-dev/api-client/index";
+import type {
+  CommentRequest,
+  ListedComment,
+  ListedReply,
+  ReplyRequest,
+} from "@halo-dev/api-client";
 // @ts-ignore
 import { Picker } from "emoji-mart";
-import { ref, watch, watchEffect } from "vue";
-import cloneDeep from "lodash.cloneDeep";
+import { inject, ref, watchEffect } from "vue";
+import { apiClient } from "@/utils/api-client";
 
-const initialFormState: ReplyRequest = {
-  raw: "",
-  content: "",
-  allowNotification: true,
-  owner: undefined,
-  quoteReply: undefined,
-};
-
-const formState = ref<ReplyRequest>(cloneDeep(initialFormState));
-const saving = ref(false);
-
-watch(
-  () => formState.value.raw,
-  (newValue) => {
-    formState.value.content = newValue;
+const props = withDefaults(
+  defineProps<{
+    comment?: ListedComment;
+    reply?: ListedReply;
+  }>(),
+  {
+    comment: undefined,
+    reply: undefined,
   }
 );
+
+const emit = defineEmits<{
+  (event: "created"): void;
+}>();
+
+const kind = inject<string>("kind");
+const name = inject<string>("name");
+
+const raw = ref("");
+const allowNotification = ref(true);
+const saving = ref(false);
+
+const handleSubmit = async () => {
+  if (!props.comment) {
+    handleCreateComment();
+    return;
+  }
+  handleCreateReply();
+};
+
+const handleCreateComment = async () => {
+  if (!kind || !name) {
+    console.error("Please provide kind and name");
+    return;
+  }
+  try {
+    saving.value = true;
+    const commentRequest: CommentRequest = {
+      raw: raw.value,
+      content: raw.value,
+      allowNotification: allowNotification.value,
+      subjectRef: {
+        version: "v1alpha1",
+        group: "content.halo.run",
+        kind,
+        name,
+      },
+    };
+    await apiClient.comment.createComment({
+      commentRequest,
+    });
+    raw.value = "";
+    emit("created");
+  } catch (error) {
+    console.error("Failed to create comment", error);
+  } finally {
+    saving.value = false;
+  }
+};
+
+const handleCreateReply = async () => {
+  if (!kind || !name) {
+    console.error("Please provide kind and name");
+    return;
+  }
+
+  try {
+    saving.value = true;
+    const replyRequest: ReplyRequest = {
+      raw: raw.value,
+      content: raw.value,
+      allowNotification: allowNotification.value,
+    };
+    if (props.reply) {
+      replyRequest.quoteReply = props.reply.reply.metadata.name;
+    }
+    await apiClient.comment.createReply({
+      name: props.comment.comment.metadata.name,
+      replyRequest,
+    });
+    raw.value = "";
+    emit("created");
+  } catch (error) {
+    console.error("Failed to create comment reply", error);
+  } finally {
+    saving.value = false;
+  }
+};
 
 // Emoji picker
 const emojiPickerRef = ref<HTMLElement | null>(null);
@@ -42,7 +118,7 @@ const emojiPicker = new Picker({
 });
 
 function onEmojiSelect(emoji: { native: string }) {
-  formState.value.raw += emoji.native;
+  raw.value += emoji.native;
   contentInputRef.value.focus();
 }
 
@@ -72,16 +148,18 @@ watchEffect(() => {
       </div>
       <textarea
         ref="contentInputRef"
-        v-model="formState.raw"
+        v-model="raw"
+        required
         class="w-full h-28 rounded-base border-gray-300 shadow-sm focus:border-secondary ring-0 outline-0"
         placeholder="Write a comment..."
       ></textarea>
 
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <img
-            class="rounded-full w-8 h-8"
-            :src="`https://avatars.dicebear.com/api/adventurer-neutral/ryanwang.svg`"
+          <VAvatar
+            src="https://avatars.dicebear.com/api/adventurer-neutral/ryanwang.svg"
+            size="sm"
+            circle
           />
           <span class="text-sm font-medium"> Ryan Wang </span>
           <VButton size="sm">注销</VButton>
@@ -95,7 +173,7 @@ watchEffect(() => {
               <div ref="emojiPickerRef"></div>
             </template>
           </Dropdown>
-          <VButton type="secondary">
+          <VButton type="secondary" :loading="saving" @click="handleSubmit">
             <template #icon>
               <MdiSendCircleOutline class="w-full h-full" />
             </template>
