@@ -76,7 +76,7 @@ const isHoveredReply = computed(() => {
             </div>
             <a
               :href="`#reply-${reply.reply.metadata.name}`"
-              class="text-xs text-gray-500 cursor-pointer hover:text-blue-600 hover:underline"
+              class="cursor-pointer text-xs text-gray-500 hover:text-blue-600 hover:underline"
             >
               {{ timeAgo }}
             </a>
@@ -87,7 +87,7 @@ const isHoveredReply = computed(() => {
           <p class="text-sm text-gray-800">
             <a
               v-if="quoteReply"
-              class="hover:text-blue-500 text-gray-600 hover:underline font-medium inline-flex flex-row items-center gap-1 bg-gray-200 rounded py-0.5 px-1 text-xs mr-1"
+              class="mr-1 inline-flex flex-row items-center gap-1 rounded bg-gray-200 py-0.5 px-1 text-xs font-medium text-gray-600 hover:text-blue-500 hover:underline"
               :href="`#reply-${quoteReply.reply.metadata.name}`"
               @mouseenter="handleShowQuoteReply(true)"
               @mouseleave="handleShowQuoteReply(false)"
@@ -99,9 +99,9 @@ const isHoveredReply = computed(() => {
             {{ reply.reply.spec.content }}
           </p>
         </div>
-        <div class="reply-actions mt-2 flex flex-auto gap-1 items-center">
+        <div class="reply-actions mt-2 flex flex-auto items-center gap-1">
           <span
-            class="text-xs text-gray-600 hover:text-gray-900 cursor-pointer select-none"
+            class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900"
             @click="showForm = !showForm"
           >
             回复

@@ -156,18 +156,18 @@ onMounted(() => {
 <template>
   <LoginModal v-model:visible="loginModal" />
   <div class="comment-form flex gap-4">
-    <div class="flex-1 flex flex-col gap-y-4">
-      <div v-if="false" class="grid gap-2 grid-cols-1 sm:grid-cols-3">
+    <div class="flex flex-1 flex-col gap-y-4">
+      <div v-if="false" class="grid grid-cols-1 gap-2 sm:grid-cols-3">
         <input
-          class="w-full rounded-base border-gray-300 shadow-sm focus:border-secondary ring-0 outline-0"
+          class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
           type="text"
         />
         <input
-          class="w-full rounded-base border-gray-300 shadow-sm focus:border-secondary ring-0 outline-0"
+          class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
           type="text"
         />
         <input
-          class="w-full rounded-base border-gray-300 shadow-sm focus:border-secondary ring-0 outline-0"
+          class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
           type="text"
         />
       </div>
@@ -175,7 +175,7 @@ onMounted(() => {
         ref="contentInputRef"
         v-model="raw"
         required
-        class="w-full h-28 rounded-base border-gray-300 shadow-sm focus:border-secondary ring-0 outline-0"
+        class="rounded-base focus:border-secondary h-28 w-full border-gray-300 shadow-sm outline-0 ring-0"
         placeholder="Write a comment..."
       ></textarea>
 
@@ -193,16 +193,16 @@ onMounted(() => {
           <template v-else>
             <VButton size="sm" @click="loginModal = true">
               <template #icon>
-                <IconUserLine class="w-full h-full" />
+                <IconUserLine class="h-full w-full" />
               </template>
               登录
             </VButton>
           </template>
         </div>
-        <div class="flex items-center flex-row gap-3">
+        <div class="flex flex-row items-center gap-3">
           <Dropdown>
             <MdiStickerEmoji
-              class="w-5 h-5 text-gray-500 hover:text-gray-900 transition-all cursor-pointer"
+              class="h-5 w-5 cursor-pointer text-gray-500 transition-all hover:text-gray-900"
             />
             <template #popper>
               <div ref="emojiPickerRef"></div>
@@ -215,7 +215,7 @@ onMounted(() => {
             @click="handleSubmit"
           >
             <template #icon>
-              <MdiSendCircleOutline class="w-full h-full" />
+              <MdiSendCircleOutline class="h-full w-full" />
             </template>
             提交评论
           </VButton>

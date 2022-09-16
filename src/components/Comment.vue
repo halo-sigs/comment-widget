@@ -89,7 +89,7 @@ const onCommentCreated = () => {
     <Form @created="onCommentCreated" />
     <div class="comment-timeline mt-6">
       <div class="flex items-center">
-        <div class="flex flex-auto gap-1 items-center">
+        <div class="flex flex-auto items-center gap-1">
           <span class="text-sm font-medium text-gray-900">
             {{ comments?.total || 0 }} 条评论
           </span>
@@ -99,7 +99,7 @@ const onCommentCreated = () => {
         <div></div>
       </div>
 
-      <div class="flex flex-col mt-4 divide-y divide-gray-100">
+      <div class="mt-4 flex flex-col divide-y divide-gray-100">
         <Loading v-if="loading" />
         <VEmpty
           v-else-if="!comments.items.length && !loading"
@@ -124,7 +124,7 @@ const onCommentCreated = () => {
     </div>
     <div
       v-if="comments.hasPrevious || comments.hasNext"
-      class="bg-white my-4 sm:flex sm:items-center sm:justify-center"
+      class="my-4 bg-white sm:flex sm:items-center sm:justify-center"
     >
       <VPagination
         :page="comments.page"

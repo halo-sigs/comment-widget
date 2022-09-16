@@ -78,16 +78,16 @@ watch(
     :width="400"
     @update:visible="onVisibleChange"
   >
-    <div class="flex gap-2 flex-col">
+    <div class="flex flex-col gap-2">
       <input
         v-model="formState.username"
-        class="w-full rounded-base border-gray-300 shadow-sm focus:border-secondary ring-0 outline-0"
+        class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
         placeholder="用户名"
         type="text"
       />
       <input
         v-model="formState.password"
-        class="w-full rounded-base border-gray-300 shadow-sm focus:border-secondary ring-0 outline-0"
+        class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
         placeholder="密码"
         type="password"
       />

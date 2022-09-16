@@ -98,7 +98,7 @@ const onReplyCreated = () => {
             </div>
             <a
               :href="`#comment-${comment?.comment.metadata.name}`"
-              class="text-xs text-gray-500 cursor-pointer hover:text-blue-600 hover:underline"
+              class="cursor-pointer text-xs text-gray-500 hover:text-blue-600 hover:underline"
             >
               {{ timeAgo }}
             </a>
@@ -110,16 +110,16 @@ const onReplyCreated = () => {
             {{ comment?.comment?.spec.content }}
           </p>
         </div>
-        <div class="comment-actions mt-2 flex flex-auto gap-1 items-center">
+        <div class="comment-actions mt-2 flex flex-auto items-center gap-1">
           <span
-            class="text-xs text-gray-600 hover:text-gray-900 cursor-pointer select-none"
+            class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900"
             @click="showReplies = !showReplies"
           >
             {{ comment?.comment.status?.replyCount || 0 }} 条回复
           </span>
           <span class="text-gray-600">·</span>
           <span
-            class="text-xs text-gray-600 hover:text-gray-900 cursor-pointer select-none"
+            class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900"
             @click="showForm = !showForm"
           >
             加入回复

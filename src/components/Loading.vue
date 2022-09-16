@@ -3,7 +3,7 @@
 <template>
   <div class="flex items-center justify-center py-2 transition-all">
     <svg
-      class="animate-spin h-5 w-5"
+      class="h-5 w-5 animate-spin"
       fill="none"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"

@@ -33,6 +33,7 @@ importers:
       npm-run-all: ^4.1.5
       postcss: ^8.4.16
       prettier: ^2.7.1
+      prettier-plugin-tailwindcss: ^0.1.13
       qs: ^6.11.0
       release-it: ^15.4.1
       sass: ^1.54.9
@@ -82,6 +83,7 @@ importers:
       npm-run-all: 4.1.5
       postcss: 8.4.16
       prettier: 2.7.1
+      prettier-plugin-tailwindcss: 0.1.13_prettier@2.7.1
       release-it: 15.4.1
       sass: 1.54.9
       tailwindcss: 3.1.8
@@ -4031,6 +4033,15 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       fast-diff: 1.2.0
+    dev: true
+
+  /prettier-plugin-tailwindcss/0.1.13_prettier@2.7.1:
+    resolution: {integrity: sha512-/EKQURUrxLu66CMUg4+1LwGdxnz8of7IDvrSLqEtDqhLH61SAlNNUSr90UTvZaemujgl3OH/VHg+fyGltrNixw==}
+    engines: {node: '>=12.17.0'}
+    peerDependencies:
+      prettier: '>=2.2.0'
+    dependencies:
+      prettier: 2.7.1
     dev: true
 
   /prettier/2.7.1:
