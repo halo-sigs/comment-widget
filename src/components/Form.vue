@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { VButton, VAvatar, IconUserLine } from "@halo-dev/components";
-import { Dropdown } from "floating-vue";
 import LoginModal from "./LoginModal.vue";
 import data from "@emoji-mart/data";
 import i18n from "@emoji-mart/data/i18n/zh.json";
@@ -18,6 +17,7 @@ import { Picker } from "emoji-mart";
 import { inject, onMounted, ref, watchEffect, type Ref } from "vue";
 import { apiClient } from "@/utils/api-client";
 import { useMagicKeys } from "@vueuse/core";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 
 const props = withDefaults(
   defineProps<{
@@ -198,14 +198,31 @@ onMounted(() => {
           </template>
         </div>
         <div class="flex flex-row items-center gap-3">
-          <Dropdown container=".comment-form">
-            <MdiStickerEmoji
-              class="h-5 w-5 cursor-pointer text-gray-500 transition-all hover:text-gray-900"
-            />
-            <template #popper>
-              <div ref="emojiPickerRef"></div>
-            </template>
-          </Dropdown>
+          <Popover v-slot="{ open }" class="relative">
+            <PopoverButton
+              :class="open ? '' : 'text-opacity-90'"
+              class="outline-0"
+              as="div"
+            >
+              <MdiStickerEmoji
+                class="h-5 w-5 cursor-pointer text-gray-500 transition-all hover:text-gray-900"
+              />
+            </PopoverButton>
+            <transition
+              enter-active-class="transition duration-200 ease-out"
+              enter-from-class="translate-y-1 opacity-0"
+              enter-to-class="translate-y-0 opacity-100"
+              leave-active-class="transition duration-150 ease-in"
+              leave-from-class="translate-y-0 opacity-100"
+              leave-to-class="translate-y-1 opacity-0"
+            >
+              <PopoverPanel
+                class="absolute z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0"
+              >
+                <div ref="emojiPickerRef"></div>
+              </PopoverPanel>
+            </transition>
+          </Popover>
           <VButton
             :disabled="!raw || !currentUser"
             type="secondary"
