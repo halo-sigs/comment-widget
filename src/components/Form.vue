@@ -182,12 +182,10 @@ onMounted(() => {
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
           <template v-if="currentUser">
-            <VAvatar
-              src="https://avatars.dicebear.com/api/adventurer-neutral/ryanwang.svg"
-              size="sm"
-              circle
-            />
-            <span class="text-sm font-medium"> Ryan Wang </span>
+            <VAvatar :src="currentUser.spec.avatar" size="sm" circle />
+            <span class="text-sm font-medium">
+              {{ currentUser.spec.displayName }}
+            </span>
             <VButton size="sm">注销</VButton>
           </template>
           <template v-else>
