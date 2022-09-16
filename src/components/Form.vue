@@ -198,7 +198,7 @@ onMounted(() => {
           </template>
         </div>
         <div class="flex flex-row items-center gap-3">
-          <Dropdown>
+          <Dropdown container=".comment-form">
             <MdiStickerEmoji
               class="h-5 w-5 cursor-pointer text-gray-500 transition-all hover:text-gray-900"
             />
