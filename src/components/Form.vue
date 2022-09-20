@@ -111,6 +111,10 @@ const handleCreateReply = async () => {
   }
 };
 
+const handleLogout = () => {
+  window.open(`${import.meta.env.VITE_API_URL}/logout`);
+};
+
 // Emoji picker
 const emojiPickerRef = ref<HTMLElement | null>(null);
 const contentInputRef = ref();
@@ -154,7 +158,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <LoginModal v-model:visible="loginModal" />
   <div class="comment-form flex gap-4">
     <div class="flex flex-1 flex-col gap-y-4">
       <div v-if="false" class="grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -186,7 +189,7 @@ onMounted(() => {
             <span class="text-sm font-medium">
               {{ currentUser.spec.displayName }}
             </span>
-            <VButton size="sm">注销</VButton>
+            <VButton size="sm" @click="handleLogout">注销</VButton>
           </template>
           <template v-else>
             <VButton size="sm" @click="loginModal = true">
@@ -237,5 +240,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <LoginModal v-model:visible="loginModal" />
   </div>
 </template>

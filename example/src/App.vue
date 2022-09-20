@@ -5,6 +5,6 @@ import "@halo-dev/comment-widget/dist/style.css";
 
 <template>
   <div style="padding: 10px">
-    <Comment kind="Post" name="ebef0e2e-9446-44de-8aad-72af1afb2638"></Comment>
+    <Comment kind="Post" name="e520cb9a-f2a1-4205-92d9-29f793893d2f"></Comment>
   </div>
 </template>

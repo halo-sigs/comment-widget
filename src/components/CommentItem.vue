@@ -73,6 +73,7 @@ watch(
 const onReplyCreated = () => {
   showForm.value = false;
   showReplies.value = true;
+  handleFetchReplies();
 };
 </script>
 

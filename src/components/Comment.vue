@@ -93,8 +93,8 @@ const onCommentCreated = () => {
           <span class="text-sm font-medium text-gray-900">
             {{ comments?.total || 0 }} 条评论
           </span>
-          <span class="font-bold">·</span>
-          <span class="text-sm text-gray-800">20 条回复</span>
+          <span v-if="false" class="font-bold">·</span>
+          <span v-if="false" class="text-sm text-gray-800">20 条回复</span>
         </div>
         <div></div>
       </div>
