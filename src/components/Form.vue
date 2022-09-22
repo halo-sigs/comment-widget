@@ -7,9 +7,9 @@ import MdiStickerEmoji from "~icons/mdi/sticker-emoji";
 import MdiSendCircleOutline from "~icons/mdi/send-circle-outline";
 import type {
   CommentRequest,
-  ListedComment,
-  ListedReply,
+  CommentVo,
   ReplyRequest,
+  ReplyVo,
   User,
 } from "@halo-dev/api-client";
 // @ts-ignore
@@ -21,8 +21,8 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 
 const props = withDefaults(
   defineProps<{
-    comment?: ListedComment;
-    reply?: ListedReply;
+    comment?: CommentVo;
+    reply?: ReplyVo;
   }>(),
   {
     comment: undefined,
@@ -37,6 +37,8 @@ const emit = defineEmits<{
 const currentUser = inject<Ref<User | undefined>>("currentUser");
 const kind = inject<string>("kind");
 const name = inject<string>("name");
+const group = inject<string>("group");
+const version = inject<string>("version");
 
 const loginModal = ref(false);
 
@@ -64,13 +66,13 @@ const handleCreateComment = async () => {
       content: raw.value,
       allowNotification: allowNotification.value,
       subjectRef: {
-        version: "v1alpha1",
-        group: "content.halo.run",
+        version: version,
+        group: group,
         kind,
         name,
       },
     };
-    await apiClient.comment.createComment({
+    await apiClient.comment.createComment1({
       commentRequest,
     });
     raw.value = "";
@@ -96,10 +98,10 @@ const handleCreateReply = async () => {
       allowNotification: allowNotification.value,
     };
     if (props.reply) {
-      replyRequest.quoteReply = props.reply.reply.metadata.name;
+      replyRequest.quoteReply = props.reply.metadata.name;
     }
-    await apiClient.comment.createReply({
-      name: props.comment.comment.metadata.name,
+    await apiClient.comment.createReply1({
+      name: props.comment.metadata.name,
       replyRequest,
     });
     raw.value = "";

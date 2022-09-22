@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { VTag, VAvatar } from "@halo-dev/components";
 import Form from "./Form.vue";
-import type { ListedComment, ListedReply } from "@halo-dev/api-client";
-import { computed, inject, provide, ref, type Ref } from "vue";
+import type { CommentVo, ReplyVo } from "@halo-dev/api-client";
+import { computed, inject, ref, type Ref } from "vue";
 import { useTimeAgo } from "@vueuse/core";
 import MdiReply from "~icons/mdi/reply";
 
 const props = defineProps<{
-  comment?: ListedComment;
-  reply: ListedReply;
-  replies: ListedReply[];
+  comment?: CommentVo;
+  reply: ReplyVo;
+  replies: ReplyVo[];
 }>();
 
 const emit = defineEmits<{
@@ -19,17 +19,17 @@ const emit = defineEmits<{
 const showForm = ref(false);
 
 const timeAgo = useTimeAgo(
-  new Date(props.reply.reply.metadata.creationTimestamp || new Date())
+  new Date(props.reply.metadata.creationTimestamp || new Date())
 );
 
 const quoteReply = computed(() => {
-  const { quoteReply: replyName } = props.reply.reply.spec;
+  const { quoteReply: replyName } = props.reply.spec;
 
   if (!replyName) {
     return undefined;
   }
 
-  return props.replies.find((reply) => reply.reply.metadata.name === replyName);
+  return props.replies.find((reply) => reply.metadata.name === replyName);
 });
 
 const onReplyCreated = () => {
@@ -38,7 +38,7 @@ const onReplyCreated = () => {
 };
 
 // Show hovered reply
-const hoveredReply = inject<Ref<ListedReply | undefined>>("hoveredReply");
+const hoveredReply = inject<Ref<ReplyVo | undefined>>("hoveredReply");
 
 const handleShowQuoteReply = (show: boolean) => {
   if (hoveredReply) {
@@ -47,15 +47,13 @@ const handleShowQuoteReply = (show: boolean) => {
 };
 
 const isHoveredReply = computed(() => {
-  return (
-    hoveredReply?.value?.reply.metadata.name === props.reply.reply.metadata.name
-  );
+  return hoveredReply?.value?.metadata.name === props.reply.metadata.name;
 });
 </script>
 
 <template>
   <div
-    :id="`reply-${reply.reply.metadata.name}`"
+    :id="`reply-${reply.metadata.name}`"
     class="reply-item py-3"
     :class="{ 'animate-breath': isHoveredReply }"
   >
@@ -75,7 +73,7 @@ const isHoveredReply = computed(() => {
               {{ reply.owner.displayName }}
             </div>
             <a
-              :href="`#reply-${reply.reply.metadata.name}`"
+              :href="`#reply-${reply.metadata.name}`"
               class="cursor-pointer text-xs text-gray-500 hover:text-blue-600 hover:underline"
             >
               {{ timeAgo }}
@@ -88,7 +86,7 @@ const isHoveredReply = computed(() => {
             <a
               v-if="quoteReply"
               class="mr-1 inline-flex flex-row items-center gap-1 rounded bg-gray-200 py-0.5 px-1 text-xs font-medium text-gray-600 hover:text-blue-500 hover:underline"
-              :href="`#reply-${quoteReply.reply.metadata.name}`"
+              :href="`#reply-${quoteReply.metadata.name}`"
               @mouseenter="handleShowQuoteReply(true)"
               @mouseleave="handleShowQuoteReply(false)"
             >
@@ -96,7 +94,7 @@ const isHoveredReply = computed(() => {
               <span>{{ quoteReply.owner.displayName }}</span>
             </a>
             <br v-if="quoteReply" />
-            {{ reply.reply.spec.content }}
+            {{ reply.spec.content }}
           </p>
         </div>
         <div class="reply-actions mt-2 flex flex-auto items-center gap-1">

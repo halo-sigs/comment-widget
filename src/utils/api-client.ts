@@ -1,7 +1,6 @@
 import {
-  ApiConsoleHaloRunV1alpha1CommentApi,
-  ApiConsoleHaloRunV1alpha1ReplyApi,
   ApiConsoleHaloRunV1alpha1UserApi,
+  ApiHaloRunV1alpha1CommentApi,
 } from "@halo-dev/api-client";
 import axios from "axios";
 
@@ -23,16 +22,7 @@ axiosInstance.interceptors.response.use(
 
 const apiClient = {
   user: new ApiConsoleHaloRunV1alpha1UserApi(undefined, apiUrl, axiosInstance),
-  comment: new ApiConsoleHaloRunV1alpha1CommentApi(
-    undefined,
-    apiUrl,
-    axiosInstance
-  ),
-  reply: new ApiConsoleHaloRunV1alpha1ReplyApi(
-    undefined,
-    apiUrl,
-    axiosInstance
-  ),
+  comment: new ApiHaloRunV1alpha1CommentApi(undefined, apiUrl, axiosInstance),
 };
 
 export { apiClient };
