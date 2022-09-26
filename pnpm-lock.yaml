@@ -5,7 +5,7 @@ importers:
   .:
     specifiers:
       '@emoji-mart/data': ^1.0.6
-      '@halo-dev/api-client': ^0.0.23
+      '@halo-dev/api-client': ^0.0.28
       '@halo-dev/components': ^0.0.0-alpha.3
       '@headlessui/vue': ^1.7.2
       '@iconify-json/mdi': ^1.1.33
@@ -50,7 +50,7 @@ importers:
       vue-typegen: ^0.2.0
     dependencies:
       '@emoji-mart/data': 1.0.6
-      '@halo-dev/api-client': 0.0.23
+      '@halo-dev/api-client': 0.0.28
       '@halo-dev/components': 0.0.0-alpha.3_u55wpvgoaskkfdnhr4v2vlugdi
       '@headlessui/vue': 1.7.2_vue@3.2.39
       '@vueuse/core': 9.2.0_vue@3.2.39
@@ -259,8 +259,8 @@ packages:
       - supports-color
     dev: true
 
-  /@halo-dev/api-client/0.0.23:
-    resolution: {integrity: sha512-YI+uGnHvGgKvt6HRtwf/AI73gQCDT1/vS4c3vsaTzDm9h66joL4ST0t1xSLuc1IXVmtf9ktggInqEktUgVko0Q==}
+  /@halo-dev/api-client/0.0.28:
+    resolution: {integrity: sha512-cr+Dc9qY1WUoVa9IJIyCWfPaoDy3Sn7FLTI6uquPLuNH5i2mNZsuxPy34sS5VI4AbpqGcvRRB9L6OIq8PonqDA==}
     dev: false
 
   /@halo-dev/components/0.0.0-alpha.3_u55wpvgoaskkfdnhr4v2vlugdi:
