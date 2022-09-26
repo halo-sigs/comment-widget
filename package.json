@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@emoji-mart/data": "^1.0.6",
-    "@halo-dev/api-client": "^0.0.23",
+    "@halo-dev/api-client": "^0.0.28",
     "@halo-dev/components": "^0.0.0-alpha.3",
     "@headlessui/vue": "^1.7.2",
     "@vueuse/core": "^9.2.0",

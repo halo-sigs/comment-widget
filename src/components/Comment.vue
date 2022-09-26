@@ -4,25 +4,31 @@ import CommentItem from "./CommentItem.vue";
 import Loading from "./Loading.vue";
 import Form from "./Form.vue";
 import { onMounted, provide, ref, type Ref } from "vue";
-import type { ListedCommentList, User } from "@halo-dev/api-client";
+import type { CommentVoList, User } from "@halo-dev/api-client";
 import { apiClient } from "../utils/api-client";
 
 const props = withDefaults(
   defineProps<{
     kind: string;
     name: string;
+    group: string;
+    version: string;
   }>(),
   {
     kind: undefined,
     name: undefined,
+    group: undefined,
+    version: undefined,
   }
 );
 
 provide<string>("kind", props.kind);
 provide<string>("name", props.name);
+provide<string>("group", props.group);
+provide<string>("version", props.version);
 
 const currentUser = ref<User>();
-const comments = ref<ListedCommentList>({
+const comments = ref<CommentVoList>({
   page: 1,
   size: 20,
   total: 0,
@@ -48,12 +54,13 @@ const handleFetchLoginedUser = async () => {
 const handleFetchComments = async () => {
   try {
     loading.value = true;
-    const { data } = await apiClient.comment.listComments({
+    const { data } = await apiClient.comment.listComments1({
       page: comments.value.page,
       size: comments.value.size,
-      subjectKind: props.kind,
-      subjectName: props.name,
-      sort: "CREATE_TIME",
+      kind: props.kind,
+      name: props.name,
+      group: props.group,
+      version: props.version,
     });
     comments.value = data;
   } catch (error) {

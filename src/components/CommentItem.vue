@@ -3,14 +3,14 @@ import ReplyItem from "./ReplyItem.vue";
 import { VTag, VAvatar, VEmpty, VSpace, VButton } from "@halo-dev/components";
 import Loading from "./Loading.vue";
 import Form from "./Form.vue";
-import type { ListedComment, ListedReply, Post } from "@halo-dev/api-client";
+import type { CommentVo, ReplyVo } from "@halo-dev/api-client";
 import { computed, provide, ref, watch, type Ref } from "vue";
 import { apiClient } from "@/utils/api-client";
 import { useTimeAgo } from "@vueuse/core";
 
 const props = withDefaults(
   defineProps<{
-    comment?: ListedComment;
+    comment?: CommentVo;
   }>(),
   {
     comment: undefined,
@@ -20,36 +20,38 @@ const props = withDefaults(
 const showReplies = ref(false);
 const showForm = ref(false);
 
-const replies = ref<ListedReply[]>([] as ListedReply[]);
+const replies = ref<ReplyVo[]>([] as ReplyVo[]);
 const loading = ref(false);
-const hoveredReply = ref<ListedReply>();
+const hoveredReply = ref<ReplyVo>();
 
-provide<Ref<ListedReply | undefined>>("hoveredReply", hoveredReply);
+provide<Ref<ReplyVo | undefined>>("hoveredReply", hoveredReply);
 
 const timeAgo = useTimeAgo(
-  new Date(props.comment.comment.metadata.creationTimestamp || new Date())
+  new Date(props.comment.metadata.creationTimestamp || new Date())
 );
 
 const isAuthor = computed(() => {
   if (!props.comment) {
     return false;
   }
-  const { comment, subject, owner } = props.comment;
-  if (comment.spec.owner.kind !== "User") {
-    return false;
-  }
-  if (!subject) {
-    return false;
-  }
-  const { spec } = subject as Post;
-  return owner?.name === spec.owner;
+  return false;
+  // TODO get post info
+  // const { comment, subject, owner } = props.comment;
+  // if (comment.spec.owner.kind !== "User") {
+  //   return false;
+  // }
+  // if (!subject) {
+  //   return false;
+  // }
+  // const { spec } = subject as Post;
+  // return owner?.name === spec.owner;
 });
 
 const handleFetchReplies = async () => {
   try {
     loading.value = true;
-    const { data } = await apiClient.reply.listReplies({
-      commentName: props.comment.comment.metadata.name,
+    const { data } = await apiClient.comment.listCommentReplies({
+      name: props.comment.metadata.name,
     });
     replies.value = data.items;
   } catch (error) {
@@ -78,10 +80,7 @@ const onReplyCreated = () => {
 </script>
 
 <template>
-  <div
-    :id="`comment-${comment?.comment.metadata.name}`"
-    class="comment-item py-4"
-  >
+  <div :id="`comment-${comment?.metadata.name}`" class="comment-item py-4">
     <div class="flex flex-row gap-3">
       <div class="comment-avatar">
         <VAvatar
@@ -98,7 +97,7 @@ const onReplyCreated = () => {
               {{ comment?.owner?.displayName }}
             </div>
             <a
-              :href="`#comment-${comment?.comment.metadata.name}`"
+              :href="`#comment-${comment?.metadata.name}`"
               class="cursor-pointer text-xs text-gray-500 hover:text-blue-600 hover:underline"
             >
               {{ timeAgo }}
@@ -108,7 +107,7 @@ const onReplyCreated = () => {
         </div>
         <div class="comment-content mt-2">
           <p class="text-sm text-gray-800">
-            {{ comment?.comment?.spec.content }}
+            {{ comment?.spec.content }}
           </p>
         </div>
         <div class="comment-actions mt-2 flex flex-auto items-center gap-1">
@@ -116,7 +115,7 @@ const onReplyCreated = () => {
             class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900"
             @click="showReplies = !showReplies"
           >
-            {{ comment?.comment.status?.replyCount || 0 }} 条回复
+            {{ comment?.status?.replyCount || 0 }} 条回复
           </span>
           <span class="text-gray-600">·</span>
           <span
