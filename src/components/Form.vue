@@ -148,15 +148,6 @@ watchEffect(() => {
     handleSubmit();
   }
 });
-
-onMounted(() => {
-  const timer = setTimeout(() => {
-    if (contentInputRef.value) {
-      contentInputRef.value.focus();
-    }
-    clearTimeout(timer);
-  }, 0);
-});
 </script>
 
 <template>
