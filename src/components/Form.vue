@@ -14,7 +14,7 @@ import type {
 } from "@halo-dev/api-client";
 // @ts-ignore
 import { Picker } from "emoji-mart";
-import { inject, onMounted, ref, watchEffect, type Ref } from "vue";
+import { inject, ref, watchEffect, type Ref } from "vue";
 import { apiClient } from "@/utils/api-client";
 import { useMagicKeys } from "@vueuse/core";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
@@ -38,7 +38,6 @@ const currentUser = inject<Ref<User | undefined>>("currentUser");
 const kind = inject<string>("kind");
 const name = inject<string>("name");
 const group = inject<string>("group");
-const version = inject<string>("version");
 
 const loginModal = ref(false);
 
@@ -66,7 +65,6 @@ const handleCreateComment = async () => {
       content: raw.value,
       allowNotification: allowNotification.value,
       subjectRef: {
-        version: version,
         group: group,
         kind,
         name,

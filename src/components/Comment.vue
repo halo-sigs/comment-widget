@@ -12,20 +12,17 @@ const props = withDefaults(
     kind: string;
     name: string;
     group: string;
-    version: string;
   }>(),
   {
     kind: undefined,
     name: undefined,
     group: undefined,
-    version: undefined,
   }
 );
 
 provide<string>("kind", props.kind);
 provide<string>("name", props.name);
 provide<string>("group", props.group);
-provide<string>("version", props.version);
 
 const currentUser = ref<User>();
 const comments = ref<CommentVoList>({
@@ -60,7 +57,6 @@ const handleFetchComments = async () => {
       kind: props.kind,
       name: props.name,
       group: props.group,
-      version: props.version,
     });
     comments.value = data;
   } catch (error) {
