@@ -1,6 +1,6 @@
 {
   "name": "@halo-dev/comment-widget",
-  "version": "0.0.0-alpha.10",
+  "version": "0.0.0-alpha.11",
   "private": false,
   "files": [
     "dist"
