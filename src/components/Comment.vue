@@ -57,6 +57,7 @@ const handleFetchComments = async () => {
       kind: props.kind,
       name: props.name,
       group: props.group,
+      version: "v1alpha1",
     });
     comments.value = data;
   } catch (error) {
