@@ -68,6 +68,7 @@ const handleCreateComment = async () => {
         group: group,
         kind,
         name,
+        version: "v1alpha1",
       },
     };
     await apiClient.comment.createComment1({
