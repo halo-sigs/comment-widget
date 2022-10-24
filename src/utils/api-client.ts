@@ -4,7 +4,7 @@ import {
 } from "@halo-dev/api-client";
 import axios from "axios";
 
-const apiUrl = "http://localhost:8090";
+const apiUrl = import.meta.env.VITE_API_URL;
 const axiosInstance = axios.create({
   baseURL: apiUrl,
   withCredentials: true,
