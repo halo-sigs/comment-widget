@@ -17,7 +17,6 @@ import { Picker } from "emoji-mart";
 import { computed, inject, ref, watchEffect, type Ref } from "vue";
 import { apiClient } from "@/utils/api-client";
 import { useMagicKeys } from "@vueuse/core";
-import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 
 const props = withDefaults(
   defineProps<{
@@ -129,6 +128,7 @@ const getColorScheme = computed(() => {
 
 const emojiPickerRef = ref<HTMLElement | null>(null);
 const contentInputRef = ref();
+const emojiPickerVisible = ref(false);
 
 const emojiPicker = new Picker({
   data: data,
@@ -205,16 +205,11 @@ watchEffect(() => {
           </template>
         </div>
         <div class="flex flex-row items-center gap-3">
-          <Popover v-slot="{ open }" class="relative">
-            <PopoverButton
-              :class="open ? '' : 'text-opacity-90'"
-              class="outline-0"
-              as="div"
-            >
-              <MdiStickerEmoji
-                class="h-5 w-5 cursor-pointer text-gray-500 transition-all hover:text-gray-900"
-              />
-            </PopoverButton>
+          <div class="relative">
+            <MdiStickerEmoji
+              class="h-5 w-5 cursor-pointer text-gray-500 transition-all hover:text-gray-900 dark:text-slate-300 dark:hover:text-slate-50"
+              @click="emojiPickerVisible = !emojiPickerVisible"
+            />
             <transition
               enter-active-class="transition duration-200 ease-out"
               enter-from-class="translate-y-1 opacity-0"
@@ -223,13 +218,14 @@ watchEffect(() => {
               leave-from-class="translate-y-0 opacity-100"
               leave-to-class="translate-y-1 opacity-0"
             >
-              <PopoverPanel
-                class="absolute z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0"
+              <div
+                v-show="emojiPickerVisible"
+                class="absolute right-0 z-10 mt-3 transform px-4 sm:px-0"
               >
                 <div ref="emojiPickerRef"></div>
-              </PopoverPanel>
+              </div>
             </transition>
-          </Popover>
+          </div>
           <VButton
             :disabled="!raw || !currentUser"
             type="secondary"

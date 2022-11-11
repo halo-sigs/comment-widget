@@ -7,7 +7,6 @@ importers:
       '@emoji-mart/data': ^1.0.6
       '@halo-dev/api-client': ^0.0.35
       '@halo-dev/components': ^0.0.0-alpha.5
-      '@headlessui/vue': ^1.7.3
       '@iconify-json/mdi': ^1.1.34
       '@rushstack/eslint-patch': ^1.2.0
       '@tailwindcss/forms': ^0.5.3
@@ -53,7 +52,6 @@ importers:
       '@emoji-mart/data': 1.0.6
       '@halo-dev/api-client': 0.0.35
       '@halo-dev/components': 0.0.0-alpha.5_4g567gsol3fv3jos66rjdswwp4
-      '@headlessui/vue': 1.7.3_vue@3.2.41
       '@vueuse/components': 8.9.4_vue@3.2.41
       '@vueuse/core': 8.9.4_vue@3.2.41
       axios: 0.27.2
@@ -279,15 +277,6 @@ packages:
       codemirror: 6.0.1
       vue: 3.2.41
       vue-router: 4.1.5_vue@3.2.41
-    dev: false
-
-  /@headlessui/vue/1.7.3_vue@3.2.41:
-    resolution: {integrity: sha512-Is4iakKts9u9E0+jEZNzoJpBjwq2SamwEIoEl2RlyYSu6Zco536GsPXaQEfg/o7Eyc1GUUlcL+dJd4Rt7qyf7A==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      vue: ^3.2.0
-    dependencies:
-      vue: 3.2.41
     dev: false
 
   /@humanwhocodes/config-array/0.10.7:
