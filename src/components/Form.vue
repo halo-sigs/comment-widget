@@ -14,7 +14,7 @@ import type {
 } from "@halo-dev/api-client";
 // @ts-ignore
 import { Picker } from "emoji-mart";
-import { inject, ref, watchEffect, type Ref } from "vue";
+import { computed, inject, ref, watchEffect, type Ref } from "vue";
 import { apiClient } from "@/utils/api-client";
 import { useMagicKeys } from "@vueuse/core";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
@@ -38,6 +38,7 @@ const currentUser = inject<Ref<User | undefined>>("currentUser");
 const kind = inject<string>("kind");
 const name = inject<string>("name");
 const group = inject<string>("group");
+const colorScheme = inject<string>("colorScheme");
 
 const loginModal = ref(false);
 
@@ -117,12 +118,21 @@ const handleLogout = () => {
 };
 
 // Emoji picker
+const getColorScheme = computed(() => {
+  if (colorScheme === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+  return colorScheme;
+});
+
 const emojiPickerRef = ref<HTMLElement | null>(null);
 const contentInputRef = ref();
 
 const emojiPicker = new Picker({
   data: data,
-  theme: "light",
+  theme: getColorScheme.value,
   autoFocus: true,
   i18n: i18n,
   onEmojiSelect: onEmojiSelect,
@@ -172,7 +182,7 @@ watchEffect(() => {
         v-model="raw"
         required
         rows="4"
-        class="rounded-base block h-full w-full resize-y appearance-none bg-white px-3 py-2 text-sm text-black antialiased outline-0 transition-all dark:bg-slate-700 dark:text-slate-50"
+        class="rounded-base block h-full w-full resize-y appearance-none bg-white px-3 py-2 text-sm text-black antialiased outline-0 ring-1 ring-gray-300 transition-all dark:bg-slate-700 dark:text-slate-50 dark:ring-slate-600"
         placeholder="编写评论"
       ></textarea>
 
@@ -180,7 +190,7 @@ watchEffect(() => {
         <div class="flex items-center gap-3">
           <template v-if="currentUser">
             <VAvatar :src="currentUser.spec.avatar" size="sm" circle />
-            <span class="text-sm font-medium">
+            <span class="text-sm font-medium dark:text-slate-50">
               {{ currentUser.spec.displayName }}
             </span>
             <VButton size="sm" @click="handleLogout">注销</VButton>

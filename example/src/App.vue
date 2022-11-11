@@ -32,7 +32,7 @@ const name = useLocalStorage("name", "");
       :kind="kind"
       :name="name"
       :group="group"
-      color-scheme="system"
+      color-scheme="dark"
     ></Comment>
   </div>
 </template>

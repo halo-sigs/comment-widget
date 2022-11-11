@@ -25,6 +25,7 @@ const props = withDefaults(
 provide<string>("kind", props.kind);
 provide<string>("name", props.name);
 provide<string>("group", props.group);
+provide<string>("colorScheme", props.colorScheme);
 
 const currentUser = ref<User>();
 const comments = ref<CommentVoList>({
