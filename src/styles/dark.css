@@ -1,0 +1,7 @@
+.empty-title {
+  @apply dark:!text-slate-50;
+}
+
+.empty-message {
+  @apply dark:!text-slate-400;
+}

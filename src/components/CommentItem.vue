@@ -93,33 +93,39 @@ const onReplyCreated = () => {
       <div class="flex-1">
         <div class="comment-informations flex items-center">
           <div class="flex flex-auto items-center gap-3">
-            <div class="text-sm font-medium">
+            <div class="text-sm font-medium dark:text-slate-50">
               {{ comment?.owner?.displayName }}
             </div>
             <a
               :href="`#comment-${comment?.metadata.name}`"
-              class="cursor-pointer text-xs text-gray-500 hover:text-blue-600 hover:underline"
+              class="cursor-pointer text-xs text-gray-500 hover:text-blue-600 hover:underline dark:text-slate-400 dark:hover:text-slate-300"
             >
               {{ timeAgo }}
             </a>
-            <VTag v-if="isAuthor" rounded>Author</VTag>
+            <VTag
+              v-if="isAuthor"
+              rounded
+              class="dark:!border-slate-600 dark:!bg-slate-700 dark:!text-slate-50"
+            >
+              Author
+            </VTag>
           </div>
         </div>
         <div class="comment-content mt-2">
-          <p class="text-sm text-gray-800">
+          <p class="text-sm text-gray-800 dark:text-slate-200">
             {{ comment?.spec.content }}
           </p>
         </div>
         <div class="comment-actions mt-2 flex flex-auto items-center gap-1">
           <span
-            class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900"
+            class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900 dark:text-slate-500 dark:hover:text-slate-400"
             @click="showReplies = !showReplies"
           >
             {{ comment?.status?.replyCount || 0 }} 条回复
           </span>
           <span class="text-gray-600">·</span>
           <span
-            class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900"
+            class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900 dark:text-slate-500 dark:hover:text-slate-400"
             @click="showForm = !showForm"
           >
             加入回复
@@ -134,7 +140,9 @@ const onReplyCreated = () => {
         />
 
         <div v-if="showReplies" class="comment-replies mt-2">
-          <div class="flex flex-col divide-y divide-gray-100">
+          <div
+            class="flex flex-col divide-y divide-gray-100 dark:divide-slate-700"
+          >
             <Loading v-if="loading" />
             <VEmpty
               v-else-if="!replies.length && !loading && !showForm"

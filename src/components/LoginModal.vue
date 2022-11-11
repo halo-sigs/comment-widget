@@ -81,13 +81,13 @@ watch(
     <div class="flex flex-col gap-2">
       <input
         v-model="formState.username"
-        class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
+        class="rounded-base block h-9 w-full resize-none appearance-none border border-gray-300 bg-white px-3 text-sm text-black antialiased outline-0 transition-all"
         placeholder="用户名"
         type="text"
       />
       <input
         v-model="formState.password"
-        class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
+        class="rounded-base block h-9 w-full resize-none appearance-none border border-gray-300 bg-white px-3 text-sm text-black antialiased outline-0 transition-all"
         placeholder="密码"
         type="password"
       />

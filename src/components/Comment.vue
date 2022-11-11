@@ -3,7 +3,7 @@ import { VEmpty, VSpace, VButton, VPagination } from "@halo-dev/components";
 import CommentItem from "./CommentItem.vue";
 import Loading from "./Loading.vue";
 import Form from "./Form.vue";
-import { onMounted, provide, ref, type Ref } from "vue";
+import { computed, onMounted, provide, ref, type Ref } from "vue";
 import type { CommentVoList, User } from "@halo-dev/api-client";
 import { apiClient } from "../utils/api-client";
 
@@ -12,11 +12,13 @@ const props = withDefaults(
     kind: string;
     name: string;
     group: string;
+    colorScheme?: "system" | "dark" | "light";
   }>(),
   {
     kind: undefined,
     name: undefined,
     group: undefined,
+    colorScheme: "light",
   }
 );
 
@@ -87,14 +89,23 @@ onMounted(() => {
 const onCommentCreated = () => {
   handleFetchComments();
 };
+
+const getColorScheme = computed(() => {
+  if (props.colorScheme === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+  return props.colorScheme;
+});
 </script>
 <template>
-  <div class="halo-comment-widget">
+  <div class="halo-comment-widget" :class="getColorScheme">
     <Form @created="onCommentCreated" />
     <div class="comment-timeline mt-6">
       <div class="flex items-center">
         <div class="flex flex-auto items-center gap-1">
-          <span class="text-sm font-medium text-gray-900">
+          <span class="text-sm font-medium text-gray-900 dark:text-slate-50">
             {{ comments?.total || 0 }} 条评论
           </span>
           <span v-if="false" class="font-bold">·</span>
@@ -103,7 +114,9 @@ const onCommentCreated = () => {
         <div></div>
       </div>
 
-      <div class="mt-4 flex flex-col divide-y divide-gray-100">
+      <div
+        class="mt-4 flex flex-col divide-y divide-gray-100 dark:divide-slate-700"
+      >
         <Loading v-if="loading" />
         <VEmpty
           v-else-if="!comments.items.length && !loading"
@@ -128,12 +141,13 @@ const onCommentCreated = () => {
     </div>
     <div
       v-if="comments.hasPrevious || comments.hasNext"
-      class="my-4 bg-white sm:flex sm:items-center sm:justify-center"
+      class="my-4 sm:flex sm:items-center sm:justify-center"
     >
       <VPagination
         :page="comments.page"
         :size="comments.size"
         :total="comments.total"
+        class="bg-transparent"
         @change="handlePaginationChange"
       />
     </div>

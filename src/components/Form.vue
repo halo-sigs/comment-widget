@@ -166,12 +166,14 @@ watchEffect(() => {
           type="text"
         />
       </div>
+
       <textarea
         ref="contentInputRef"
         v-model="raw"
         required
-        class="rounded-base focus:border-secondary h-28 w-full border-gray-300 shadow-sm outline-0 ring-0"
-        placeholder="Write a comment..."
+        rows="4"
+        class="rounded-base block h-full w-full resize-y appearance-none bg-white px-3 py-2 text-sm text-black antialiased outline-0 transition-all dark:bg-slate-700 dark:text-slate-50"
+        placeholder="编写评论"
       ></textarea>
 
       <div class="flex items-center justify-between">

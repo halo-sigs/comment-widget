@@ -28,6 +28,11 @@ const name = useLocalStorage("name", "");
       />
     </div>
 
-    <Comment :kind="kind" :name="name" :group="group"></Comment>
+    <Comment
+      :kind="kind"
+      :name="name"
+      :group="group"
+      color-scheme="system"
+    ></Comment>
   </div>
 </template>

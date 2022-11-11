@@ -69,23 +69,28 @@ const isHoveredReply = computed(() => {
       <div class="flex-1">
         <div class="reply-informations flex items-center">
           <div class="flex flex-auto items-center gap-3">
-            <div class="text-sm font-medium">
+            <div class="text-sm font-medium dark:text-slate-50">
               {{ reply.owner.displayName }}
             </div>
             <a
               :href="`#reply-${reply.metadata.name}`"
-              class="cursor-pointer text-xs text-gray-500 hover:text-blue-600 hover:underline"
+              class="cursor-pointer text-xs text-gray-500 hover:text-blue-600 hover:underline dark:text-slate-400 dark:hover:text-slate-300"
             >
               {{ timeAgo }}
             </a>
-            <VTag rounded>Author</VTag>
+            <VTag
+              rounded
+              class="dark:!border-slate-600 dark:!bg-slate-700 dark:!text-slate-50"
+            >
+              Author
+            </VTag>
           </div>
         </div>
         <div class="reply-content mt-2">
-          <p class="text-sm text-gray-800">
+          <p class="text-sm text-gray-800 dark:text-slate-200">
             <a
               v-if="quoteReply"
-              class="mr-1 inline-flex flex-row items-center gap-1 rounded bg-gray-200 py-0.5 px-1 text-xs font-medium text-gray-600 hover:text-blue-500 hover:underline"
+              class="mr-1 inline-flex flex-row items-center gap-1 rounded bg-gray-200 py-0.5 px-1 text-xs font-medium text-gray-600 hover:text-blue-500 hover:underline dark:bg-slate-700 dark:text-slate-200 dark:hover:text-slate-100"
               :href="`#reply-${quoteReply.metadata.name}`"
               @mouseenter="handleShowQuoteReply(true)"
               @mouseleave="handleShowQuoteReply(false)"
@@ -99,7 +104,7 @@ const isHoveredReply = computed(() => {
         </div>
         <div class="reply-actions mt-2 flex flex-auto items-center gap-1">
           <span
-            class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900"
+            class="cursor-pointer select-none text-xs text-gray-600 hover:text-gray-900 dark:text-slate-500 dark:hover:text-slate-400"
             @click="showForm = !showForm"
           >
             回复
