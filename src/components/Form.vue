@@ -100,7 +100,7 @@ const handleCreateReply = async () => {
       replyRequest.quoteReply = props.reply.metadata.name;
     }
     await apiClient.comment.createReply1({
-      name: props.comment.metadata.name,
+      name: props.comment?.metadata.name as string,
       replyRequest,
     });
     raw.value = "";

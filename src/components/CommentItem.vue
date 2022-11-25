@@ -33,7 +33,7 @@ const hoveredReply = ref<ReplyVo>();
 provide<Ref<ReplyVo | undefined>>("hoveredReply", hoveredReply);
 
 const timeAgo = useTimeAgo(
-  new Date(props.comment?.metadata.creationTimestamp || new Date())
+  new Date(props.comment?.spec.approvedTime || new Date())
 );
 
 const isAuthor = computed(() => {

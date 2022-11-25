@@ -32,10 +32,10 @@
   },
   "dependencies": {
     "@emoji-mart/data": "^1.0.8",
-    "@halo-dev/api-client": "^0.0.53",
+    "@halo-dev/api-client": "^0.0.54",
     "@halo-dev/components": "^0.0.0-alpha.8",
-    "@vueuse/components": "8.9.4",
-    "@vueuse/core": "8.9.4",
+    "@vueuse/components": "^9.6.0",
+    "@vueuse/core": "^9.6.0",
     "axios": "^0.27.2",
     "emoji-mart": "^5.3.3",
     "lodash.clonedeep": "^4.5.0",
