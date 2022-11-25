@@ -1,7 +1,12 @@
 <script lang="ts" setup>
-import { VEmpty, VSpace, VButton, VPagination } from "@halo-dev/components";
+import {
+  VEmpty,
+  VSpace,
+  VButton,
+  VPagination,
+  VLoading,
+} from "@halo-dev/components";
 import CommentItem from "./CommentItem.vue";
-import Loading from "./Loading.vue";
 import Form from "./Form.vue";
 import { computed, onMounted, provide, ref, type Ref } from "vue";
 import type { CommentVoList, User } from "@halo-dev/api-client";
@@ -37,6 +42,7 @@ const comments = ref<CommentVoList>({
   last: false,
   hasNext: false,
   hasPrevious: false,
+  totalPages: 0,
 });
 const loading = ref(false);
 
@@ -118,26 +124,25 @@ const getColorScheme = computed(() => {
       <div
         class="mt-4 flex flex-col divide-y divide-gray-100 dark:divide-slate-700"
       >
-        <Loading v-if="loading" />
-        <VEmpty
-          v-else-if="!comments.items.length && !loading"
-          title="暂无评论"
-          message="你可以尝试点击刷新或者添加新评论"
-        >
-          <template #actions>
-            <VSpace>
-              <VButton type="default" @click="handleFetchComments">
-                刷新
-              </VButton>
-            </VSpace>
-          </template>
-        </VEmpty>
-        <CommentItem
-          v-for="(comment, index) in comments.items"
-          v-else
-          :key="index"
-          :comment="comment"
-        ></CommentItem>
+        <VLoading v-if="loading" class="dark:text-slate-100" />
+        <Transition v-else-if="!comments.items.length" appear name="fade">
+          <VEmpty title="暂无评论" message="你可以尝试点击刷新或者添加新评论">
+            <template #actions>
+              <VSpace>
+                <VButton type="default" @click="handleFetchComments">
+                  刷新
+                </VButton>
+              </VSpace>
+            </template>
+          </VEmpty>
+        </Transition>
+        <TransitionGroup v-else appear name="fade" tag="div">
+          <CommentItem
+            v-for="(comment, index) in comments.items"
+            :key="index"
+            :comment="comment"
+          ></CommentItem>
+        </TransitionGroup>
       </div>
     </div>
     <div

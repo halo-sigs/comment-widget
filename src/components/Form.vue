@@ -189,7 +189,12 @@ watchEffect(() => {
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
           <template v-if="currentUser">
-            <VAvatar :src="currentUser.spec.avatar" size="sm" circle />
+            <VAvatar
+              :src="currentUser.spec.avatar"
+              :alt="currentUser.spec.displayName"
+              size="sm"
+              circle
+            />
             <span class="text-sm font-medium dark:text-slate-50">
               {{ currentUser.spec.displayName }}
             </span>

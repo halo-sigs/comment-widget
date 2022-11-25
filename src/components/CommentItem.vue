@@ -1,7 +1,13 @@
 <script lang="ts" setup>
 import ReplyItem from "./ReplyItem.vue";
-import { VTag, VAvatar, VEmpty, VSpace, VButton } from "@halo-dev/components";
-import Loading from "./Loading.vue";
+import {
+  VTag,
+  VAvatar,
+  VEmpty,
+  VSpace,
+  VButton,
+  VLoading,
+} from "@halo-dev/components";
 import Form from "./Form.vue";
 import type { CommentVo, ReplyVo } from "@halo-dev/api-client";
 import { computed, provide, ref, watch, type Ref } from "vue";
@@ -27,7 +33,7 @@ const hoveredReply = ref<ReplyVo>();
 provide<Ref<ReplyVo | undefined>>("hoveredReply", hoveredReply);
 
 const timeAgo = useTimeAgo(
-  new Date(props.comment.metadata.creationTimestamp || new Date())
+  new Date(props.comment?.metadata.creationTimestamp || new Date())
 );
 
 const isAuthor = computed(() => {
@@ -51,7 +57,7 @@ const handleFetchReplies = async () => {
   try {
     loading.value = true;
     const { data } = await apiClient.comment.listCommentReplies({
-      name: props.comment.metadata.name,
+      name: props.comment?.metadata.name as string,
     });
     replies.value = data.items;
   } catch (error) {
@@ -143,33 +149,39 @@ const onReplyCreated = () => {
           <div
             class="flex flex-col divide-y divide-gray-100 dark:divide-slate-700"
           >
-            <Loading v-if="loading" />
-            <VEmpty
-              v-else-if="!replies.length && !loading && !showForm"
-              title="暂无回复"
-              message="你可以尝试点击刷新或者添加新回复"
+            <VLoading v-if="loading" class="dark:text-slate-100" />
+            <Transition
+              v-else-if="!replies.length && !showForm"
+              appear
+              name="fade"
             >
-              <template #actions>
-                <VSpace>
-                  <VButton type="default" @click="handleFetchReplies">
-                    刷新
-                  </VButton>
-                  <VButton type="primary" @click="showForm = true">
-                    回复
-                  </VButton>
-                </VSpace>
-              </template>
-            </VEmpty>
-            <ReplyItem
-              v-for="(reply, index) in replies"
-              v-else
-              :key="index"
-              :class="{ '!pt-2': index === 1 }"
-              :comment="comment"
-              :reply="reply"
-              :replies="replies"
-              @reload="handleFetchReplies"
-            ></ReplyItem>
+              <VEmpty
+                title="暂无回复"
+                message="你可以尝试点击刷新或者添加新回复"
+              >
+                <template #actions>
+                  <VSpace>
+                    <VButton type="default" @click="handleFetchReplies">
+                      刷新
+                    </VButton>
+                    <VButton type="primary" @click="showForm = true">
+                      回复
+                    </VButton>
+                  </VSpace>
+                </template>
+              </VEmpty>
+            </Transition>
+            <TransitionGroup v-else appear name="fade" tag="div">
+              <ReplyItem
+                v-for="(reply, index) in replies"
+                :key="index"
+                :class="{ '!pt-2': index === 1 }"
+                :comment="comment"
+                :reply="reply"
+                :replies="replies"
+                @reload="handleFetchReplies"
+              ></ReplyItem>
+            </TransitionGroup>
           </div>
         </div>
       </div>
