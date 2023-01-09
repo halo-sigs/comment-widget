@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { VButton, VAvatar, IconUserLine } from "@halo-dev/components";
+import { VButton, VAvatar, Toast, Dialog } from "@halo-dev/components";
 import LoginModal from "./LoginModal.vue";
 import data from "@emoji-mart/data";
 import i18n from "@emoji-mart/data/i18n/zh.json";
@@ -16,7 +16,14 @@ import type {
 import { Picker } from "emoji-mart";
 import { computed, inject, ref, watchEffect, type Ref } from "vue";
 import { apiClient } from "@/utils/api-client";
-import { useMagicKeys } from "@vueuse/core";
+import { useLocalStorage, useMagicKeys } from "@vueuse/core";
+import axios from "axios";
+
+interface CustomAccount {
+  displayName: string;
+  email: string;
+  website?: string;
+}
 
 const props = withDefaults(
   defineProps<{
@@ -45,6 +52,15 @@ const raw = ref("");
 const allowNotification = ref(true);
 const saving = ref(false);
 
+const customAccount = useLocalStorage<CustomAccount>(
+  "halo-comment-custom-account",
+  {
+    displayName: "",
+    email: "",
+    website: "",
+  }
+);
+
 const handleSubmit = async () => {
   if (!props.comment) {
     handleCreateComment();
@@ -71,10 +87,30 @@ const handleCreateComment = async () => {
         version: "v1alpha1",
       },
     };
+
+    if (!currentUser?.value) {
+      if (!customAccount.value.displayName) {
+        Toast.warning("请填写昵称");
+        return;
+      }
+      if (!customAccount.value.email) {
+        Toast.warning("请填写电子邮件");
+        return;
+      }
+      commentRequest.owner = {
+        displayName: customAccount.value.displayName,
+        email: customAccount.value.email,
+        website: customAccount.value.website,
+      };
+    }
+
     await apiClient.comment.createComment1({
       commentRequest,
     });
     raw.value = "";
+
+    Toast.success("评论成功");
+
     emit("created");
   } catch (error) {
     console.error("Failed to create comment", error);
@@ -99,11 +135,31 @@ const handleCreateReply = async () => {
     if (props.reply) {
       replyRequest.quoteReply = props.reply.metadata.name;
     }
+
+    if (!currentUser?.value) {
+      if (!customAccount.value.displayName) {
+        Toast.warning("请填写昵称");
+        return;
+      }
+      if (!customAccount.value.email) {
+        Toast.warning("请填写电子邮件");
+        return;
+      }
+      replyRequest.owner = {
+        displayName: customAccount.value.displayName,
+        email: customAccount.value.email,
+        website: customAccount.value.website,
+      };
+    }
+
     await apiClient.comment.createReply1({
       name: props.comment?.metadata.name as string,
       replyRequest,
     });
     raw.value = "";
+
+    Toast.success("回复成功");
+
     emit("created");
   } catch (error) {
     console.error("Failed to create comment reply", error);
@@ -113,7 +169,20 @@ const handleCreateReply = async () => {
 };
 
 const handleLogout = () => {
-  window.open(`${import.meta.env.VITE_API_URL}/logout`);
+  Dialog.warning({
+    title: "确定要退出登录吗？",
+    onConfirm: async () => {
+      try {
+        await axios.post(`${import.meta.env.VITE_API_URL}/logout`, undefined, {
+          withCredentials: true,
+        });
+
+        window.location.reload();
+      } catch (error) {
+        console.error("Failed to logout", error);
+      }
+    },
+  });
 };
 
 // Emoji picker
@@ -162,21 +231,6 @@ watchEffect(() => {
 <template>
   <div class="comment-form flex gap-4">
     <div class="flex flex-1 flex-col gap-y-4">
-      <div v-if="false" class="grid grid-cols-1 gap-2 sm:grid-cols-3">
-        <input
-          class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
-          type="text"
-        />
-        <input
-          class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
-          type="text"
-        />
-        <input
-          class="rounded-base focus:border-secondary w-full border-gray-300 shadow-sm outline-0 ring-0"
-          type="text"
-        />
-      </div>
-
       <textarea
         ref="contentInputRef"
         v-model="raw"
@@ -185,6 +239,37 @@ watchEffect(() => {
         class="rounded-base block h-full w-full resize-y appearance-none bg-white px-3 py-2 text-sm text-black antialiased outline-0 ring-1 ring-gray-300 transition-all dark:bg-slate-700 dark:text-slate-50 dark:ring-slate-600"
         placeholder="编写评论"
       ></textarea>
+
+      <div
+        v-if="!currentUser"
+        class="grid grid-cols-1 items-center gap-2 sm:grid-cols-4"
+      >
+        <input
+          v-model="customAccount.displayName"
+          class="rounded-base h-9 px-2 py-0.5 text-sm outline-none ring-1 ring-gray-300 dark:bg-slate-700 dark:text-slate-50 dark:ring-slate-600"
+          type="text"
+          placeholder="昵称"
+        />
+        <input
+          v-model="customAccount.email"
+          class="rounded-base h-9 px-2 py-0.5 text-sm outline-none ring-1 ring-gray-300 dark:bg-slate-700 dark:text-slate-50 dark:ring-slate-600"
+          type="email"
+          placeholder="电子邮件"
+        />
+        <input
+          v-model="customAccount.website"
+          class="rounded-base h-9 px-2 py-0.5 text-sm outline-none ring-1 ring-gray-300 dark:bg-slate-700 dark:text-slate-50 dark:ring-slate-600"
+          type="url"
+          placeholder="网站"
+        />
+
+        <div
+          class="cursor-pointer select-none text-xs text-gray-600 transition-all hover:text-gray-900 dark:text-slate-200 dark:hover:text-slate-400"
+          @click="loginModal = true"
+        >
+          （已有该站点的账号）
+        </div>
+      </div>
 
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -199,14 +284,6 @@ watchEffect(() => {
               {{ currentUser.spec.displayName }}
             </span>
             <VButton size="sm" @click="handleLogout">注销</VButton>
-          </template>
-          <template v-else>
-            <VButton size="sm" @click="loginModal = true">
-              <template #icon>
-                <IconUserLine class="h-full w-full" />
-              </template>
-              登录
-            </VButton>
           </template>
         </div>
         <div class="flex flex-row items-center gap-3">
@@ -232,7 +309,7 @@ watchEffect(() => {
             </transition>
           </div>
           <VButton
-            :disabled="!raw || !currentUser"
+            :disabled="!raw"
             type="secondary"
             :loading="saving"
             @click="handleSubmit"
