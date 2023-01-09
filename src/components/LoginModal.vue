@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { VModal, VButton } from "@halo-dev/components";
+import { VModal, VButton, Toast } from "@halo-dev/components";
 import { ref, watch } from "vue";
 import { v4 as uuid } from "uuid";
 import qs from "qs";
+import axios from "axios";
 
 const props = withDefaults(
   defineProps<{
@@ -43,19 +44,21 @@ const handleLogin = async () => {
   try {
     loading.value = true;
 
-    await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      credentials: "include",
-      redirect: "manual",
-      body: qs.stringify(formState.value),
-    });
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/login`,
+      qs.stringify(formState.value),
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
 
     window.location.reload();
   } catch (e) {
     console.error("Failed to login", e);
+    Toast.error("登录失败，用户名或密码错误");
   } finally {
     loading.value = false;
   }

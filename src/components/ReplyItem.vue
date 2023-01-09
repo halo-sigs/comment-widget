@@ -79,6 +79,7 @@ const isHoveredReply = computed(() => {
               {{ timeAgo }}
             </a>
             <VTag
+              v-if="false"
               rounded
               class="dark:!border-slate-600 dark:!bg-slate-700 dark:!text-slate-50"
             >
