@@ -51,7 +51,8 @@ provide<Ref<User | undefined>>("currentUser", currentUser);
 const handleFetchLoginedUser = async () => {
   try {
     const { data } = await apiClient.user.getCurrentUserDetail();
-    currentUser.value = data;
+    currentUser.value =
+      data.metadata.name === "anonymousUser" ? undefined : data;
   } catch (error) {
     console.error("Fetch logined user failed", error);
   }
