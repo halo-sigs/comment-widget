@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { VModal, VButton, Toast } from "@halo-dev/components";
+import { VModal, VButton } from "@halo-dev/components";
 import { ref, watch } from "vue";
 import { v4 as uuid } from "uuid";
 import qs from "qs";
@@ -58,7 +58,7 @@ const handleLogin = async () => {
     window.location.reload();
   } catch (e) {
     console.error("Failed to login", e);
-    Toast.error("登录失败，用户名或密码错误");
+    alert("登录失败，用户名或密码错误");
   } finally {
     loading.value = false;
   }

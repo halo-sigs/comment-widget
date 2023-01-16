@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { VButton, VAvatar, Toast, Dialog } from "@halo-dev/components";
+import { VButton, VAvatar } from "@halo-dev/components";
 import LoginModal from "./LoginModal.vue";
 import data from "@emoji-mart/data";
 import i18n from "@emoji-mart/data/i18n/zh.json";
@@ -90,11 +90,11 @@ const handleCreateComment = async () => {
 
     if (!currentUser?.value) {
       if (!customAccount.value.displayName) {
-        Toast.warning("请填写昵称");
+        alert("请填写昵称");
         return;
       }
       if (!customAccount.value.email) {
-        Toast.warning("请填写电子邮件");
+        alert("请填写电子邮件");
         return;
       }
       commentRequest.owner = {
@@ -108,8 +108,6 @@ const handleCreateComment = async () => {
       commentRequest,
     });
     raw.value = "";
-
-    Toast.success("评论成功");
 
     emit("created");
   } catch (error) {
@@ -138,11 +136,11 @@ const handleCreateReply = async () => {
 
     if (!currentUser?.value) {
       if (!customAccount.value.displayName) {
-        Toast.warning("请填写昵称");
+        alert("请填写昵称");
         return;
       }
       if (!customAccount.value.email) {
-        Toast.warning("请填写电子邮件");
+        alert("请填写电子邮件");
         return;
       }
       replyRequest.owner = {
@@ -158,8 +156,6 @@ const handleCreateReply = async () => {
     });
     raw.value = "";
 
-    Toast.success("回复成功");
-
     emit("created");
   } catch (error) {
     console.error("Failed to create comment reply", error);
@@ -168,21 +164,18 @@ const handleCreateReply = async () => {
   }
 };
 
-const handleLogout = () => {
-  Dialog.warning({
-    title: "确定要退出登录吗？",
-    onConfirm: async () => {
-      try {
-        await axios.post(`${import.meta.env.VITE_API_URL}/logout`, undefined, {
-          withCredentials: true,
-        });
+const handleLogout = async () => {
+  if (window.confirm("确定要退出登录吗？")) {
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/logout`, undefined, {
+        withCredentials: true,
+      });
 
-        window.location.reload();
-      } catch (error) {
-        console.error("Failed to logout", error);
-      }
-    },
-  });
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to logout", error);
+    }
+  }
 };
 
 // Emoji picker
