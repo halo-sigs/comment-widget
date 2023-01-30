@@ -11,6 +11,8 @@ import Form from "./Form.vue";
 import { computed, onMounted, provide, ref, type Ref } from "vue";
 import type { CommentVoList, User } from "@halo-dev/api-client";
 import { apiClient } from "../utils/api-client";
+import axios from "axios";
+import type { GlobalInfo } from "../types";
 
 const props = withDefaults(
   defineProps<{
@@ -106,6 +108,24 @@ const getColorScheme = computed(() => {
   }
   return props.colorScheme;
 });
+
+// fetch value of allowAnonymousComments
+
+const allowAnonymousComments = ref<boolean | undefined>(false);
+
+provide<Ref<Boolean | undefined>>(
+  "allowAnonymousComments",
+  allowAnonymousComments
+);
+
+const handleFetchValueOfAllowAnonymousComments = async () => {
+  const { data } = await axios.get<GlobalInfo>(`/actuator/globalinfo`, {
+    withCredentials: true,
+  });
+  allowAnonymousComments.value = data.allowAnonymousComments;
+};
+
+onMounted(handleFetchValueOfAllowAnonymousComments);
 </script>
 <template>
   <div class="halo-comment-widget" :class="getColorScheme">

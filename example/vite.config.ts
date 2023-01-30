@@ -12,5 +12,11 @@ export default defineConfig({
   },
   server: {
     port: 4000,
+    proxy: {
+      "/actuator": {
+        target: "http://localhost:8090",
+        changeOrigin: true,
+      },
+    },
   },
 });
