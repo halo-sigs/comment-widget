@@ -22,6 +22,14 @@ const timeAgo = useTimeAgo(
   new Date(props.reply.spec.approvedTime || new Date())
 );
 
+const website = computed(() => {
+  if (!props.reply) {
+    return "";
+  }
+  const { annotations } = props.reply.spec.owner;
+  return annotations?.website;
+});
+
 const quoteReply = computed(() => {
   const { quoteReply: replyName } = props.reply.spec;
 
@@ -70,7 +78,17 @@ const isHoveredReply = computed(() => {
         <div class="reply-informations flex items-center">
           <div class="flex flex-auto items-center gap-3">
             <div class="text-sm font-medium dark:text-slate-50">
-              {{ reply.owner.displayName }}
+              <a
+                v-if="website"
+                class="hover:text-gray-600 dark:hover:text-slate-300"
+                :href="website"
+                target="_blank"
+              >
+                {{ reply?.owner.displayName }}
+              </a>
+              <span v-else>
+                {{ reply?.owner.displayName }}
+              </span>
             </div>
             <a
               :href="`#reply-${reply.metadata.name}`"

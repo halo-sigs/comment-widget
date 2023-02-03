@@ -53,6 +53,14 @@ const isAuthor = computed(() => {
   // return owner?.name === spec.owner;
 });
 
+const website = computed(() => {
+  if (!props.comment) {
+    return "";
+  }
+  const { annotations } = props.comment.spec.owner;
+  return annotations?.website;
+});
+
 const handleFetchReplies = async () => {
   try {
     loading.value = true;
@@ -100,7 +108,17 @@ const onReplyCreated = () => {
         <div class="comment-informations flex items-center">
           <div class="flex flex-auto items-center gap-3">
             <div class="text-sm font-medium dark:text-slate-50">
-              {{ comment?.owner?.displayName }}
+              <a
+                v-if="website"
+                class="hover:text-gray-600 dark:hover:text-slate-300"
+                :href="website"
+                target="_blank"
+              >
+                {{ comment?.owner.displayName }}
+              </a>
+              <span v-else>
+                {{ comment?.owner.displayName }}
+              </span>
             </div>
             <a
               :href="`#comment-${comment?.metadata.name}`"
