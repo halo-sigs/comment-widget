@@ -45,6 +45,9 @@ const kind = inject<string>("kind");
 const name = inject<string>("name");
 const group = inject<string>("group");
 const colorScheme = inject<string>("colorScheme");
+const allowAnonymousComments = inject<Ref<boolean | undefined>>(
+  "allowAnonymousComments"
+);
 
 const loginModal = ref(false);
 
@@ -76,6 +79,7 @@ const handleCreateComment = async () => {
   }
   try {
     saving.value = true;
+
     const commentRequest: CommentRequest = {
       raw: raw.value,
       content: raw.value,
@@ -88,20 +92,24 @@ const handleCreateComment = async () => {
       },
     };
 
-    if (!currentUser?.value) {
-      if (!customAccount.value.displayName) {
-        alert("请填写昵称");
+    const { displayName, email, website } = customAccount.value;
+
+    if (!currentUser?.value && !allowAnonymousComments?.value) {
+      alert("请先登录");
+      return;
+    }
+
+    if (!currentUser?.value && allowAnonymousComments?.value) {
+      if (!displayName || !email) {
+        alert("请先登录或者完善信息");
         return;
+      } else {
+        commentRequest.owner = {
+          displayName: displayName,
+          email: email,
+          website: website,
+        };
       }
-      if (!customAccount.value.email) {
-        alert("请填写电子邮件");
-        return;
-      }
-      commentRequest.owner = {
-        displayName: customAccount.value.displayName,
-        email: customAccount.value.email,
-        website: customAccount.value.website,
-      };
     }
 
     await apiClient.comment.createComment1({
@@ -125,29 +133,35 @@ const handleCreateReply = async () => {
 
   try {
     saving.value = true;
+
     const replyRequest: ReplyRequest = {
       raw: raw.value,
       content: raw.value,
       allowNotification: allowNotification.value,
     };
+
     if (props.reply) {
       replyRequest.quoteReply = props.reply.metadata.name;
     }
 
-    if (!currentUser?.value) {
-      if (!customAccount.value.displayName) {
-        alert("请填写昵称");
+    const { displayName, email, website } = customAccount.value;
+
+    if (!currentUser?.value && !allowAnonymousComments?.value) {
+      alert("请先登录");
+      return;
+    }
+
+    if (!currentUser?.value && allowAnonymousComments?.value) {
+      if (!displayName || !email) {
+        alert("请先登录或者完善信息");
         return;
+      } else {
+        replyRequest.owner = {
+          displayName: displayName,
+          email: email,
+          website: website,
+        };
       }
-      if (!customAccount.value.email) {
-        alert("请填写电子邮件");
-        return;
-      }
-      replyRequest.owner = {
-        displayName: customAccount.value.displayName,
-        email: customAccount.value.email,
-        website: customAccount.value.website,
-      };
     }
 
     await apiClient.comment.createReply1({
@@ -234,7 +248,7 @@ watchEffect(() => {
       ></textarea>
 
       <div
-        v-if="!currentUser"
+        v-if="!currentUser && allowAnonymousComments"
         class="grid grid-cols-1 items-center gap-2 sm:grid-cols-4"
       >
         <input
@@ -277,6 +291,9 @@ watchEffect(() => {
               {{ currentUser.spec.displayName }}
             </span>
             <VButton size="sm" @click="handleLogout">注销</VButton>
+          </template>
+          <template v-if="!currentUser && !allowAnonymousComments">
+            <VButton size="sm" @click="loginModal = true">登录</VButton>
           </template>
         </div>
         <div class="flex flex-row items-center gap-3">
